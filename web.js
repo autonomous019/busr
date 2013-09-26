@@ -19,6 +19,11 @@ app.get('/about', function(req, res) {
 	res.render('about', {title:"About"});
 });
 
+app.get('/map', function(req, res) {
+	res.render('map', {title:"Map"});
+});
+
+
 app.get('/route/:id', function(req, res) {
 	var entry = busrEngine.getBusrEntry(req.params.id);
 	res.render('route',{title:entry.title, busr:entry});
