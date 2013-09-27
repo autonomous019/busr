@@ -23,6 +23,9 @@ app.get('/map', function(req, res) {
 	res.render('map', {title:"Map"});
 });
 
+app.get('/agencies', function(req, res) {
+	res.render('agencies', {title:"Map"});
+});
 
 app.get('/route/:id', function(req, res) {
 	var entry = busrEngine.getBusrEntry(req.params.id);
