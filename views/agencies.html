@@ -1,6 +1,18 @@
-<h1>{{busr.title}}</h1>
-Agencies with service: {{busr.published}}
+<h1>Agencies</h1>
+<script>
+$(document).ready(function(){
+$("button").click(function(){
+$.getJSON("ustime.mta.info/api/where/routes-for-agency/MTA%20NYCT.json?key=3d264d9a-1aca-48b1-b375-929864bb5079",function(result){
+  $.each(result, function(i, field){
+    $("div").append(field + " ");
+      });
+    });
+  });
+});
+</script>
 
+
+<button>Get JSON data</button>
+<div></div>
 <p/>
 
-{{busr.body}}
