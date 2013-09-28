@@ -15,6 +15,10 @@ app.get('/', function(req, res) {
 	res.render('index',{title:"Busr Transitor", entries:busrEngine.getBusrEntries()});
 });
 
+app.get('/routes', function(req, res) {
+	res.render('routes',{id:routes.id, routes:busrEngine.getBusrRoutes()});
+});
+
 app.get('/about', function(req, res) {
 	res.render('about', {title:"About"});
 });
