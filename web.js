@@ -24,16 +24,16 @@ app.get('/map', function(req, res) {
 });
 
 app.get('/agencies', function(req, res) {
-	res.render('agencies', {title:"Map"});
+	res.render('agencies', {title:"Agencies"});
 });
 
 app.get('/route/:id', function(req, res) {
-	var entry = busrEngine.getBusrEntry(req.params.id);
-	res.render('route',{title:entry.title, busr:entry});
+	var route = busrEngine.getBusrRoute(req.params.id);
+	res.render('route',{id:route.id, busr:route});
 });
 
-app.listen(3000);
-
+//app.listen(3000);
+app.listen(1337, '127.0.0.1');
 //heroku specific
 /*app.listen(process.env.PORT || 5000, function(){
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
