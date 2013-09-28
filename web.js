@@ -3,7 +3,7 @@ var app = express();
 
 var hbs = require('hbs');
 
-var busrEngine = require('./busr');
+var busrEngine = require('./busr', './routes');
 
 app.set('view engine', 'html');
 app.engine('html', hbs.__express);

@@ -2,6 +2,7 @@ var entries = [
 {"id":1, "title":"Hello World!", "body":"need to display agencies then routes for agency", "published":"6/2/2013"},
 {"id":2, "title":"Ride the N Line", "body":"please don't get stuck in the tunnel by Safeway!", "published":"6/3/2013"}];
 
+/*
 var routes = [
               {"id":"MTA NYCT_BX10",
               "textColor":"FFFFFF",
@@ -22,6 +23,7 @@ var routes = [
               "agencyId":"MTA NYCT",
               "url":"http://www.mta.info/nyct/bus/schedule/bronx/bx011cur.pdf"}
               ];
+*/
 
 exports.getBusrEntries = function() {
 	return entries;
