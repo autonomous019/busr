@@ -16,7 +16,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/routes', function(req, res) {
-	res.render('routes',{id:routes.id, routes:busrEngine.getBusrRoutes()});
+	res.render('routes',{title:"MTA Routes", routes:busrEngine.getBusrRoutes()});
 });
 
 app.get('/about', function(req, res) {
