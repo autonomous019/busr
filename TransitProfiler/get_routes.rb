@@ -3,13 +3,23 @@ require 'open-uri'
 require 'json'
 
 #topObject = JSON.parse(File.read("event.json"));
-topObject = JSON.parse(open("http://bustime.mta.info/api/where/routes-for-agency/MTA%20NYCT.json?key=3d264d9a-1aca-48b1-b375-929864bb5079").read)
+topObject = JSON.parse(open("http://bustime.mta.info/api/where/stops-for-route/MTA%20NYCT_X17.json?key=3d264d9a-1aca-48b1-b375-929864bb5079").read)
 #puts topObject
 data = topObject["data"]
 #puts data
-references = data["references"]
+
+stops = data["stops"]
+#puts stops
+
+
+stops.each do |s|
+        stop_id = l["id"]
+        puts stop_id
+end
+
+#references = data["references"]
 #puts references
-agencies = references["agencies"]
+#agencies = references["agencies"]
 #puts agencies
 =begin 
  from json feed: http://bustime.mta.info/api/where/routes-for-agency/MTA%20NYCT.json?key=3d264d9a-1aca-48b1-b375-929864bb5079
@@ -21,6 +31,17 @@ agencies = references["agencies"]
  {"id":1, "title":"Hello World!", "body":"need to display agencies then routes for agency", "published":"6/2/2013"},
  {"id":2, "title":"Ride the N Line", "body":"please don't get stuck in the tunnel by Safeway!", "published":"6/3/2013"}];
 =end
+
+
+
+
+
+
+=begin
+
+
+
+
 list = data["list"]
 #puts list
 puts "var routes = [ "
@@ -49,6 +70,13 @@ end
 puts "];"
 
 
+
+=end
+
+
+
+#passsing hash of keys to a dynamic method to iterate through the fields needing returned
+#my_method( width: 400, height: 50, show_border: false )
 
 #sections = topObject ["sections"]
 #sections.each do |section|
