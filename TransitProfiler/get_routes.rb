@@ -1,25 +1,19 @@
 require 'rubygems' #otherwise ,require 'json' will fail
 require 'open-uri'
 require 'json'
+require 'redis'
+
+
+redis = Redis.new(:timeout => 0)
 
 #topObject = JSON.parse(File.read("event.json"));
-topObject = JSON.parse(open("http://bustime.mta.info/api/where/stops-for-route/MTA%20NYCT_X17.json?key=3d264d9a-1aca-48b1-b375-929864bb5079").read)
+topObject = JSON.parse(open("http://bustime.mta.info/api/where/routes-for-agency/MTA%20NYCT.json?key=3d264d9a-1aca-48b1-b375-929864bb5079").read)
 #puts topObject
 data = topObject["data"]
 #puts data
-
-stops = data["stops"]
-#puts stops
-
-
-stops.each do |s|
-        stop_id = l["id"]
-        puts stop_id
-end
-
-#references = data["references"]
+references = data["references"]
 #puts references
-#agencies = references["agencies"]
+agencies = references["agencies"]
 #puts agencies
 =begin 
  from json feed: http://bustime.mta.info/api/where/routes-for-agency/MTA%20NYCT.json?key=3d264d9a-1aca-48b1-b375-929864bb5079
@@ -31,20 +25,11 @@ end
  {"id":1, "title":"Hello World!", "body":"need to display agencies then routes for agency", "published":"6/2/2013"},
  {"id":2, "title":"Ride the N Line", "body":"please don't get stuck in the tunnel by Safeway!", "published":"6/3/2013"}];
 =end
-
-
-
-
-
-
-=begin
-
-
-
-
 list = data["list"]
 #puts list
 puts "var routes = [ "
+
+redis.append('routes', ' ')
 list.each do |l|
         route_id = l["id"]
         textColor = l["textColor"]
@@ -65,13 +50,13 @@ list.each do |l|
         puts "\"type\":\""+type.to_s+"\","
         puts "\"agencyId\":\""+agencyId+"\","
         puts "\"url\":\""+url+"\"},"
-       
+        redis.append('routes', route_id)
 end
 puts "];"
 
+puts redis.get('routes')
 
 
-=end
 
 
 
