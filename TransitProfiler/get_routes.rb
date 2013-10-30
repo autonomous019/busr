@@ -4,7 +4,7 @@ require 'json'
 require 'redis'
 
 
-redis = Redis.new(:timeout => 0)
+redis = Redis.new()
 
 #topObject = JSON.parse(File.read("event.json"));
 topObject = JSON.parse(open("http://bustime.mta.info/api/where/routes-for-agency/MTA%20NYCT.json?key=3d264d9a-1aca-48b1-b375-929864bb5079").read)
@@ -50,7 +50,7 @@ list.each do |l|
         puts "\"type\":\""+type.to_s+"\","
         puts "\"agencyId\":\""+agencyId+"\","
         puts "\"url\":\""+url+"\"},"
-        redis.append('routes', route_id)
+        redis.append('routes', route_id.gsub("MTA ", "MTA%20")+" ")
 end
 puts "];"
 

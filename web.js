@@ -3,7 +3,10 @@ var app = express();
 
 var hbs = require('hbs');
 
-var busrEngine = require('./busr', './routes');
+var routesEngine = require('./routes');
+var busrEngine = require('./busr');
+var stopsEngine = require('./stops')
+
 
 app.set('view engine', 'html');
 app.engine('html', hbs.__express);
@@ -16,7 +19,11 @@ app.get('/', function(req, res) {
 });
 
 app.get('/routes', function(req, res) {
-	res.render('routes',{title:"MTA Routes", routes:busrEngine.getBusrRoutes()});
+	res.render('routes',{title:"MTA Routes", routes:routesEngine.getRoutes()});
+});
+
+app.get('/stops', function(req, res) {
+	res.render('stops',{title:"MTA Stops"});
 });
 
 app.get('/about', function(req, res) {
@@ -32,9 +39,16 @@ app.get('/agencies', function(req, res) {
 });
 
 app.get('/route/:id', function(req, res) {
-	var route = busrEngine.getBusrRoute(req.params.id);
-	res.render('route',{id:route.id, busr:route});
+	var route = routesEngine.getRoute(req.params.id);
+	res.render('route',{id:route.id, route:route});
 });
+
+
+app.get('/stop/:id', function(req, res) {
+	var route = stopsEngine.getStop(req.params.id);
+	res.render('stop',{id:stop.id, stop:stop});
+});
+
 
 //app.listen(3000);
 app.listen(1337, '127.0.0.1');

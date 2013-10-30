@@ -910,3 +910,16 @@ var routes = [
 "url":"http://www.mta.info/nyct/bus/schedule/bronx/bx012scur.pdf"}
 
 ]
+
+
+
+
+exports.getRoutes = function() {
+	return routes;
+}
+
+exports.getRoute = function(id) {
+	for(var i=0; i<routes.length; i++) {
+		if(routes[i].id == id) return routes[i];
+	}
+}
