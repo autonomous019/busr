@@ -23,6 +23,11 @@ route_atom.each do |a|
 
   stops = data["stops"]
   #puts stops
+
+  puts
+   puts "var "+a+"  = ["
+  
+  
   stops.each do |s|
           stop_id = s["id"]
           #puts stop_id
@@ -69,21 +74,26 @@ route_atom.each do |a|
           
           end
         
-       
+         
+        puts "{\"id\":\""+stop_id+"\","
+        puts "\"lon\":\""+stop_lon.to_s+"\","
+        puts "\"lat\":\""+stop_lat.to_s+"\","
+        puts "\"direction\":\""+stop_direction+"\","
+        puts "\"name\":\""+stop_name+"\","
+        puts "\"code\":\""+stop_code+"\","
+        puts "\"routes\":\""+$routes+"\"},"
         
-          #puts redis.sort('stops', :get => ['*->stop_id'])
-          #puts redis.sort("stops", :by => "route|*->route_id", :get => "stops|*->stop_lat")
-          #SORT mylist BY weight_*->fieldname GET object_*->fieldname  redis docs http://redis.io/commands/sort
         
-          redis.hmset('stop_id:'+stop_id, 'stop_id', stop_id, 'stop_lon', stop_lon,  'stop_lat', stop_lat,  'stop_direction', stop_direction,  
-          'stop_name', stop_name,  'stop_code', stop_code, 'routes', $routes   )
-          redis.lpush('stops', 'stop_id:'+stop_id) 
-          puts stop_id
+          #redis.hmset('stop_id:'+stop_id, 'stop_id', stop_id, 'stop_lon', stop_lon,  'stop_lat', stop_lat,  'stop_direction', stop_direction,  
+          #'stop_name', stop_name,  'stop_code', stop_code, 'routes', $routes   )
+          #redis.lpush('stops', 'stop_id:'+stop_id) 
+          #puts stop_id
           
         
         
   end
   
+  puts "]"
   
   
 end  

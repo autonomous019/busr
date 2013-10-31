@@ -1,53 +1,62 @@
-var redis = require("redis");
-var client = redis.createClient();
-
-/*
-var stops = [ 
-{"id":"MTA NYCT_BX10",
-"textColor":"FFFFFF",
-"color":"006CB7",
-"description":"via Riverdale Av / W 231st St / Jerome Av",
-"longName":"Riverdale - Norwood",
-"shortName":"Bx10",
-"type":"3",
-"agencyId":"MTA NYCT",
-"url":"http://www.mta.info/nyct/bus/schedule/bronx/bx010cur.pdf"}
-]
 
 
+	var redis = require("redis");
+	var client = redis.createClient();
 
-{ stop_id: 'MTA_405393',
-  stop_lon: '-73.98307',
-  stop_lat: '40.766285',
-  stop_direction: 'NE',
-  stop_name: '8 AV/W  56 ST',
-  stop_code: '405393',
-  route_id: 'MTA NYCT_M104' }
+	client.on("error", function (err) {
+	    console.log("Error " + err);
+	});
 
-*/
-
-
-
-client.on("error", function (err) {
-    console.log("Error " + err);
-});
-
-//client.set("string key", "string val", redis.print);
-//client.hset("hash key", "hashtest 1", "some value", redis.print);
-//client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
-/*
-client.hkeys("stop_id:MTA_405393", function (err, replies) {
-    console.log(replies.length + " replies:");
-    replies.forEach(function (reply, i) {
-        console.log("    " + i + ": " + reply);
+	
+	var stop = [];
+	
+	/*var stop = 
+	{ id: 'MTA_200392',
+  lon: '-74.167397',
+  lat: '40.589016',
+  direction: 'NE',
+  name: 'RICHMOND AV/RICHMOND HILL RD',
+  code: '200392',
+  routes: 'MTA%20NYCT_S44 MTA%20NYCT_S59 MTA%20NYCT_S89 MTA%20NYCT_S94 MTA%20NYCT_X17 MTA%20NYCT_X17A ' }
+  */
+	
+  function createData(id){
+      client.hgetall("stop_id:"+id, function (err, obj) {
+        //var _stop = [];
+          stops =  
+             {
+  	        "id":""+obj.stop_id+"",
+  	        "lon": ""+obj.stop_lon+"",
+  	        "lat": ""+obj.stop_lat+"",
+  	        "direction": ""+obj.stop_direction+"",
+  	        "name": ""+obj.stop_name+"",
+  	        "code": ""+obj.stop_code+"",
+  	        "routes": ""+obj.routes+""
+          }
+		    
+  	  var data = stops;
+	  stop = data;
+	  //console.log(stop);
+	  
+	  return stop;
+	 
     });
-    client.quit();
-});
-*/
+}
 
 
-client.hgetall("stop_id:MTA_200392", function (err, obj) {
-    
-    console.dir(obj.stop_code);
-});
-client.quit();
+// Parses the specified text.
+exports.getStop = function(id) {
+	
+	var stop = createData(id);
+	
+    setTimeout(function () {
+      // console.log(stop);
+       
+     }, 3000);
+	
+	
+	
+	return stop;
+
+}
+//module.exports.getStop;

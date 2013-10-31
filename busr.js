@@ -25,6 +25,8 @@ var routes = [
               ];
 */
 
+
+/*
 var routes = [ 
 {"id":"MTA NYCT_BX10",
 "textColor":"FFFFFF",
@@ -937,7 +939,7 @@ var routes = [
 "url":"http://www.mta.info/nyct/bus/schedule/bronx/bx012scur.pdf"}
 
 ]
-
+*/
 
 exports.getBusrEntries = function() {
 	return entries;

@@ -1,12 +1,10 @@
 var express = require('express');
 var app = express();
-
 var hbs = require('hbs');
 
 var routesEngine = require('./routes');
 var busrEngine = require('./busr');
-var stopsEngine = require('./stops')
-
+//var stopsEngine = require('./stops')
 
 app.set('view engine', 'html');
 app.engine('html', hbs.__express);
@@ -22,8 +20,25 @@ app.get('/routes', function(req, res) {
 	res.render('routes',{title:"MTA Routes", routes:routesEngine.getRoutes()});
 });
 
-app.get('/stops', function(req, res) {
-	res.render('stops',{title:"MTA Stops"});
+app.get('/route/:id', function(req, res) {
+	var route = routesEngine.getRoute(req.params.id);
+	res.render('route',{id:route.id, route:route});
+});
+
+app.get('/stops/:id', function(req, res) {
+	var route_id = req.params.id;
+	var stops_data = require('./cache/route_'+route_id+'.js');
+	//get based on js var route_id
+	var stops = stops_data.getStops(route_id);
+	res.render('stops',{id:stops.id, stops:stops});
+});
+
+app.get('/stop/:id', function(req, res) {
+	var stop_data = require('./cache/stop_'+req.params.id+'.js');
+	//console.log(stop_data);
+    //var stopsEngine = require('./stops');
+	var stop = stop_data.getStop(req.params.id);
+	res.render('stop',{id:stop.id, stop:stop});
 });
 
 app.get('/about', function(req, res) {
@@ -38,16 +53,10 @@ app.get('/agencies', function(req, res) {
 	res.render('agencies', {title:"Agencies"});
 });
 
-app.get('/route/:id', function(req, res) {
-	var route = routesEngine.getRoute(req.params.id);
-	res.render('route',{id:route.id, route:route});
-});
 
 
-app.get('/stop/:id', function(req, res) {
-	var route = stopsEngine.getStop(req.params.id);
-	res.render('stop',{id:stop.id, stop:stop});
-});
+
+
 
 
 //app.listen(3000);
