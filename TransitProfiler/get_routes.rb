@@ -27,9 +27,9 @@ agencies = references["agencies"]
 =end
 list = data["list"]
 #puts list
-puts "var routes = [ "
+#puts "var routes = [ "
 
-redis.append('routes', ' ')
+#redis.append('routes', ' ')
 list.each do |l|
         route_id = l["id"]
         textColor = l["textColor"]
@@ -41,20 +41,48 @@ list.each do |l|
         agencyId = l["agencyId"]
         url = l["url"]
         
-        puts "{\"id\":\""+route_id+"\","
-        puts "\"textColor\":\""+textColor+"\","
-        puts "\"color\":\""+color+"\","
-        puts "\"description\":\""+description+"\","
-        puts "\"longName\":\""+longName+"\","
-        puts "\"shortName\":\""+shortName+"\","
-        puts "\"type\":\""+type.to_s+"\","
-        puts "\"agencyId\":\""+agencyId+"\","
-        puts "\"url\":\""+url+"\"},"
-        redis.append('routes', route_id.gsub("MTA ", "MTA%20")+" ")
+        #puts "{\"id\":\""+route_id+"\","
+        #puts "\"textColor\":\""+textColor+"\","
+        #puts "\"color\":\""+color+"\","
+        #puts "\"description\":\""+description+"\","
+        #puts "\"longName\":\""+longName+"\","
+        #puts "\"shortName\":\""+shortName+"\","
+        #puts "\"type\":\""+type.to_s+"\","
+        #puts "\"agencyId\":\""+agencyId+"\","
+        #puts "\"url\":\""+url+"\"},"
+        #redis.append('routes', route_id.gsub("MTA ", "MTA%20")+" ")
+        route = route_id.gsub(" ", "_")
+        route = route.gsub("+", "plus")
+        file_text = "var "+route+"  = ["
+        file_text += "{\"id\":\""+route_id+"\"," "\"textColor\":\""+textColor+"\"," "\"color\":\""+color+"\"," "\"description\":\""+description+"\"," \
+        "\"longName\":\""+longName+"\"," "\"shortName\":\""+shortName+"\"," "\"type\":\""+type.to_s+"\"," "\"agencyId\":\""+agencyId+"\"," "\"url\":\""+url+"\"},"
+        
+        
+        
+   
+        file_text += "]"
+        file_text += "
+        
+        exports.getRoute = function() {
+	          return "+route+";
+        }
+        
+        "
+        puts file_text
+        puts
+        begin
+          file = File.open("../cache/route_"+route+".js", "w")
+          file.write(file_text) 
+        rescue IOError => e
+          #some error occur, dir not writable etc.
+        ensure
+          file.close unless file == nil
+        end
+        
 end
-puts "];"
+#puts "];"
 
-puts redis.get('routes')
+#puts redis.get('routes')
 
 
 

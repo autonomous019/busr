@@ -15,3 +15,15 @@ Route description: {{route.description}}
 <p/>
 
 {{route.url}}
+
+
+
+<h3>Stops</h3>
+
+{{#each stops}}
+<p>
+<a href="/stop/{{id}}">{{id}} : {{long}} {{lat}}</a><br/>
+
+
+</p>
+{{/each}}

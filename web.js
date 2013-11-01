@@ -16,15 +16,30 @@ app.get('/', function(req, res) {
 	res.render('index',{title:"Busr Transitor", entries:busrEngine.getBusrEntries()});
 });
 
+
+
+//ROUTES ROUTES ROUTES <as in bus routes not app routing>
 app.get('/routes', function(req, res) {
 	res.render('routes',{title:"MTA Routes", routes:routesEngine.getRoutes()});
 });
 
 app.get('/route/:id', function(req, res) {
+	var route_id = req.params.id;
+	route_id = route_id.replace("%20","_");
+	route_id = route_id.replace(" ", "_");
+	route_id = route_id.replace("+", "plus");
+	var stops_data = require('./cache/route_stops_'+route_id+'.js');
+	//get based on js var route_id
+	var stops = stops_data.getStops(route_id);
 	var route = routesEngine.getRoute(req.params.id);
-	res.render('route',{id:route.id, route:route});
+	res.render('route',{id:route.id, route:route, stops:stops});
 });
 
+
+
+
+
+//STOPS STOPS STOPS
 app.get('/stops/:id', function(req, res) {
 	var route_id = req.params.id;
 	var stops_data = require('./cache/route_'+route_id+'.js');
@@ -38,17 +53,26 @@ app.get('/stop/:id', function(req, res) {
 	//console.log(stop_data);
     //var stopsEngine = require('./stops');
 	var stop = stop_data.getStop(req.params.id);
+	console.log(req.params.id);
+	console.log(stop);
 	res.render('stop',{id:stop.id, stop:stop});
-});
-
-app.get('/about', function(req, res) {
-	res.render('about', {title:"About"});
 });
 
 app.get('/map', function(req, res) {
 	res.render('map', {title:"Map"});
 });
 
+
+
+
+
+//ABOUT 
+app.get('/about', function(req, res) {
+	res.render('about', {title:"About"});
+});
+
+
+//AGENCIES NAVIGATOR
 app.get('/agencies', function(req, res) {
 	res.render('agencies', {title:"Agencies"});
 });
@@ -61,6 +85,8 @@ app.get('/agencies', function(req, res) {
 
 //app.listen(3000);
 app.listen(1337, '127.0.0.1');
+
+
 //heroku specific
 /*app.listen(process.env.PORT || 5000, function(){
   console.log("Express server listening on port %d in %s mode", this.address().port, app.settings.env);
