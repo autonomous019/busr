@@ -22,8 +22,19 @@ Route description: {{route.description}}
 
 {{#each stops}}
 <p>
-<a href="/stop/{{id}}">{{id}} : {{long}} {{lat}}</a><br/>
+<a href="/stop/{{id}}">{{id}} : {{lon}} {{lat}}</a><br/>
+
+{{direction}}<br />
+{{name}}<br />
+{{code}}<br />
+{{routes}}<br />
 
 
 </p>
 {{/each}}
+
+<!-- 
+          $stops_file_text += "{\"id\":\""+stop_id+"\"," "\"lon\":\""+stop_lon.to_s+"\","  "\"lat\":\""+stop_lat.to_s+"\"," \
+          "\"direction\":\""+stop_direction+"\"," "\"name\":\""+stop_name+"\"," "\"code\":\""+stop_code+"\"," "\"routes\":\""+$routes+"\"},"
+
+>

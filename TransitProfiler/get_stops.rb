@@ -45,13 +45,9 @@ route_atom.each do |a|
         
         
           stop_routes = s["routes"]
+          
+          #it was here
           $routes = ""
-          
-          
-          
-          $stops_file_text += "{\"id\":\""+stop_id+"\"," "\"lon\":\""+stop_lon.to_s+"\","  "\"lat\":\""+stop_lat.to_s+"\"," \
-          "\"direction\":\""+stop_direction+"\"," "\"name\":\""+stop_name+"\"," "\"code\":\""+stop_code+"\"," "\"routes\":\""+$routes+"\"},"
-         
           
           
           stop_routes.each do |r|
@@ -81,7 +77,12 @@ route_atom.each do |a|
           
           
           end
-        
+  
+  
+          $stops_file_text += "{\"id\":\""+stop_id+"\"," "\"lon\":\""+stop_lon.to_s+"\","  "\"lat\":\""+stop_lat.to_s+"\"," \
+          "\"direction\":\""+stop_direction+"\"," "\"name\":\""+stop_name+"\"," "\"code\":\""+stop_code+"\"," "\"routes\":\""+$routes+"\"},"
+ 
+  
         
         #puts "{\"id\":\""+stop_id+"\","
         #puts "\"lon\":\""+stop_lon.to_s+"\","
@@ -134,6 +135,13 @@ route_atom.each do |a|
   # case get just the stops for a given route
   route = $route_id.gsub(" ", "_")
   route = route.gsub("+", "plus")
+  
+  
+  #put it here
+ 
+  
+  
+  
   
   route_file_text = "var "+route+"  = ["
   route_file_text += $stops_file_text
