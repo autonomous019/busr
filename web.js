@@ -59,6 +59,7 @@ app.get('/stop/:id', function(req, res) {
 });
 
 app.get('/map', function(req, res) {
+	//var map_points = require('./maps/icon.js');
 	res.render('map', {title:"Map"});
 });
 

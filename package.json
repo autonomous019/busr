@@ -2,7 +2,7 @@
 	"name": "busr",
 	"subdomain": "busr",
 	"description": "Busr Transitor, your transit adaptor",
-	"version": "0.0.1-5",
+	"version": "0.0.1-6",
 	"scripts": {
 		"predeploy": "echo This will be run before deploying the app",
 		"postdeploy": "echo This will be run after deploying the app",
