@@ -19,27 +19,154 @@
 		].join(''));
 		</script> -->
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
-       <script>
-   var map;
-   function initialize() {
-     var mapOptions = {
-       zoom: 8,
-       center: new google.maps.LatLng(-34.397, 150.644),
-       mapTypeId: google.maps.MapTypeId.ROADMAP
-     };
-     map = new google.maps.Map(document.getElementById('map-canvas'),
-         mapOptions);
-   }
+       
+	<script>
+	function initialize() {
+	  var myLatlng = new google.maps.LatLng(40.6700, -73.9400);
+	  
+	  var styles = [
+	    {
+	      stylers: [
+	        { hue: "#B88A00" },
+	        { saturation: -20 }
+	      ]
+	    },{
+	      featureType: "road",
+	      elementType: "geometry",
+	      stylers: [
+	        { lightness: 100 },
+	        { visibility: "simplified" }
+	      ]
+	    },{
+	      featureType: "road",
+	      elementType: "labels",
+	      stylers: [
+	        { visibility: "off" }
+	      ]
+	    }
+	  ];
+	  
+	  var mapOptions = {
+	    zoom: 14,
+	    center: myLatlng,
+	    mapTypeId: google.maps.MapTypeId.ROADMAP,
+		styles: styles
+	  };
+      
+	  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	  
+	 var transitLayer = new google.maps.TransitLayer();
+	  transitLayer.setMap(map);	 
+	  
+	  var image = 'bus_stop_icon.png';
+	  
 
-   google.maps.event.addDomListener(window, 'load', initialize);
+	  var contentString = '<div id="content">'+
+	      '<div id="siteNotice">'+
+	      '</div>'+
+	      '<h1 id="firstHeading" class="firstHeading">MTA (New York)</h1>'+
+	      '<div id="bodyContent">'+
+	      '<p><b>MTA</b> the MTA has the responsibility for developing and implementing a unified mass transportation policy for the New York metropolitan' + 'area, including all five boroughs of New York City and the suburban counties of Dutchess, Nassau, Orange, Putnam, Rockland, Suffolk and' + 'Westchester, all of which together are the "Metropolitan Commuter Transportation District (MCTD)". Thomas F. Prendergast is currently the' + 'Chairman & CEO of the MTA. Nuria Fernandez is currently the MTA\'s Chief Operating Officer (COO).</p>'+
+	
+		  '<P>The MTA is the largest regional public transportation provider in the Western Hemisphere. Its agencies serve a region of'+ 'approximately 14.6 million people spread over 5,000 square miles (13,000 km²) in 12 New York Counties and two in Connecticut. MTA agencies now' + 
+		  'move more than 8.5 million customers per day (2.6 billion rail and bus customers a year) and employ approximately 65,000 workers.</p>' +
+	      '<p>Agency Web, <a href="http://www.mta.info">'+
+	      'mta.info</a> '+
+	      '</p>'+
+	      '</div>'+
+	      '</div>';
+		  
+		  
 
-       </script>
+	
+		  
 
+	  var infowindow = new google.maps.InfoWindow({
+	      content: contentString
+	  });
+	  /*
+	  var marker = new google.maps.Marker({
+	      position: myLatlng,
+	      map: map,
+	      title: 'MTA',
+		  icon: image
+	  });
+	  
+		
+   
+	  google.maps.event.addListener(marker, 'click', function() {
+	    infowindow.open(map,marker);
+	  });
+	  */
+	  
+	  
+      var locations = [
+           ['Bondi Beach', 40.6700, -73.9400, 4],
+           ['Coogee Beach', 40.7700, -73.9500, 5],
+           ['Cronulla Beach', 40.7000, -73.9600, 3]
+         ];
+
+ 
+         //var infowindow = new google.maps.InfoWindow();
+
+         var marker, i;
+
+         for (i = 0; i < locations.length; i++) {  
+           marker = new google.maps.Marker({
+             position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+             map: map,
+  		     title: 'MTA',
+  		     icon: image
+           });
+
+           google.maps.event.addListener(marker, 'click', (function(marker, i) {
+             return function() {
+               //infowindow.setContent(locations[i][0]);
+               infowindow.open(map, marker);
+             }
+           })(marker, i));
+         }
+	  
+	  
+	}
+	
+	
+/* 
+  var marker = new google.maps.Marker({
+      position: myLatlng,
+      map: map,
+      title: 'MTA',
+	  icon: image
+  });
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.open(map,marker);
+  });
+}
+  */
+  
+	
+	
+	
+	
+	
+	
+	
+
+	google.maps.event.addDomListener(window, 'load', initialize);
+
+
+
+
+
+</script>
+
+
+<h1>MTA (New York) Transit Map</h1>
     <div id="map-canvas" style="border-style:solid;
 border-width:5px; min-height: 400px; min-width: 100px;"></div>
 
   
-  
+
   
   
 <!-- 
