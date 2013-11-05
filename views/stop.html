@@ -1,4 +1,5 @@
-<h1>{{stop.id}}</h1>
+<h1>{{stop.name}} - ( {{stop.id}} )</h1>
+<!-- 
 Stop latitude: {{stop.lat}}
 <br />
 <br />
@@ -6,6 +7,137 @@ Stop Longitude: {{stop.lon}}
 
 
 <p/>
+
+-->
+
+<style type="text/css">
+      
+      #map-canvas { height: 100% ; margin: 0; padding: 0; width: 100%; }
+    </style>
+	
+    <!-- <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADZBLErUTwzfbch3Xou5_Nz5R956iH7n4&sensor=false">
+    </script> -->
+	<!-- 	
+		<script>
+		document.write([
+		  '<script src="http://maps.googleapis.com/maps?file=api&amp;v=2&amp;key=', {
+		    'domain1.com': 'apikey1',
+		    'domain2.com': 'apikey2',
+		    'domain3.com': 'apikey3',
+		    'domainN.com': 'apikeyN'
+		  }[window.location.host],
+		  '" type="text/javascript"><\/script>'
+		].join(''));
+		</script> -->
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+       
+	<script>
+	function initialize() {
+	  var myLatlng = new google.maps.LatLng( {{stop.lat}}, {{stop.lon}} );
+	  
+	  var styles = [
+	    {
+	      stylers: [
+	        { hue: "#B88A00" },
+	        { saturation: -20 }
+	      ]
+	    },{
+	      featureType: "road",
+	      elementType: "geometry",
+	      stylers: [
+	        { lightness: 100 },
+	        { visibility: "simplified" }
+	      ]
+	    },{
+	      featureType: "road",
+	      elementType: "labels",
+	      stylers: [
+	        { visibility: "off" }
+	      ]
+	    }
+	  ];
+	  
+	  var mapOptions = {
+	    zoom: 17,
+	    center: myLatlng,
+	    mapTypeId: google.maps.MapTypeId.ROADMAP,
+		styles: styles
+	  };
+      
+	  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+	  
+	 var transitLayer = new google.maps.TransitLayer();
+	  transitLayer.setMap(map);	 
+	  
+	  var image = '/bus_stop_icon.png';
+	  
+
+	  var contentString = '<div id="content">'+
+	      '<div id="siteNotice">'+
+	      '</div>'+
+	      '<h1 id="firstHeading" class="firstHeading">{{stop.name}}</h1>'+
+	      '<div id="bodyContent">'+
+	      '<p><b>{{stop.id}}</b> Bus Travel Direction: {{stop.direction}} Routes: {{stop.routes}} </p>'+
+	
+		 
+	      '<p>Agency Web, <a href="http://www.mta.info">'+
+	      'mta.info</a> '+
+	      '</p>'+
+	      '</div>'+
+	      '</div>';
+		  
+		  
+
+	
+		  
+
+	  var infowindow = new google.maps.InfoWindow({
+	      content: contentString
+	  });
+
+	  var marker = new google.maps.Marker({
+	      position: myLatlng,
+	      map: map,
+	      title: '{{stop.name}}',
+		  icon: image
+	  });
+	  
+		
+   
+	  google.maps.event.addListener(marker, 'click', function() {
+	    infowindow.open(map,marker);
+	  });
+	
+	  
+
+	  
+	  
+	}
+	
+	
+
+	google.maps.event.addDomListener(window, 'load', initialize);
+
+
+
+
+
+</script>
+
+
+
+    <div id="map-canvas" style="border-style:solid;
+border-width:5px; min-height: 400px; min-width: 100px;"></div>
+
+  
+
+
+
+
+<h3>Stop Schedule</h3>
+
+
 <!-- put in stop schedule and monitor info here -->
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
@@ -17,41 +149,36 @@ $(document).ready(function(){
 				success: function(data) {
 				    $.each(data, function(index, info) {
 				        $("#results").append(
-						"<div>" + info + index+"</div>"
+						    //"<div>" + info + index+"</div>"
 						);
 						if(index == 'data'){
 							$.each(info.references.stops, function(ind, stops) {
 					            $("#data").append(
-							        "<div>" + ind + stops+ stops.id +  stops+ stops.lat + stops+ stops.lon +  "</div>"
+							        //"<div>" + ind + stops+ stops.id +  stops+ stops.lat + stops+ stops.lon +  "</div>"
 							    );
 							});	
 							
 							$.each(info.entry.stopRouteSchedules, function(ind, sched) {
 					            $("#entry").append(
-							        "<div>" + sched.routeId +    "</div>"
+							        "<div><h4>ROUTE: " + sched.routeId +    "</h4></div>"
 							    );
 								
 								$.each(sched.stopRouteDirectionSchedules, function(ind, schedDir) {
 						            $("#entry").append(
-								        "<div>" + ind + schedDir.tripHeadsign + "</div>"
+								        "<div><h4>Bus Headsign: " + schedDir.tripHeadsign + "</h4></div>"
 								    );
 									
 									$.each(schedDir.scheduleStopTimes, function(ind, schedStops) {
 										
 										var arrivalDate = new Date(schedStops.arrivalTime);
 										var departureDate = new Date(schedStops.departureTime);
+										var serviceId = schedStops.serviceId;
+										var tripId = schedStops.tripId;
 										
 							            $("#entry").append(
-									        "<div>" + ind + schedStops.arrivalEnabled + arrivalDate + schedStops.departureEnabled + departureDate + schedStops.serviceId + schedStops.tripId + "</div>" 
+									        "<div>" + "<b>Arrival:</b> " + arrivalDate + "  <b>Departs:</b> " + departureDate +   "</div>" 
 											
-											/*
-<arrivalEnabled>true</arrivalEnabled>
-<arrivalTime>1383547331000</arrivalTime>
-<departureEnabled>true</departureEnabled>
-<departureTime>1383547331000</departureTime>
-<serviceId>MTA_CA_D3-Weekday-SDon</serviceId>
-<tripId>MTA NYCT_CA_D3-Weekday-SDon-009000_S53_301</tripId>
-											*/
+
 									    );
 									});	
 									
@@ -71,7 +198,7 @@ $(document).ready(function(){
 		</script>
 		
 		<div id="results"></div>
-		<hr>
+		
 		<div id="data"></div>
-		<hr>
+		
 		<div id="entry"></div>
