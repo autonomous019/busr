@@ -1,4 +1,3 @@
-
 <h1>{{stop.id}}</h1>
 Stop latitude: {{stop.lat}}
 <br />
@@ -7,4 +6,72 @@ Stop Longitude: {{stop.lon}}
 
 
 <p/>
+<!-- put in stop schedule and monitor info here -->
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 
+<script>
+$(document).ready(function(){
+			$.ajax({
+				dataType: "jsonp",
+				url: "http://bustime.mta.info/api/where/schedule-for-stop/{{stop.id}}.json?key=3d264d9a-1aca-48b1-b375-929864bb5079",
+				success: function(data) {
+				    $.each(data, function(index, info) {
+				        $("#results").append(
+						"<div>" + info + index+"</div>"
+						);
+						if(index == 'data'){
+							$.each(info.references.stops, function(ind, stops) {
+					            $("#data").append(
+							        "<div>" + ind + stops+ stops.id +  stops+ stops.lat + stops+ stops.lon +  "</div>"
+							    );
+							});	
+							
+							$.each(info.entry.stopRouteSchedules, function(ind, sched) {
+					            $("#entry").append(
+							        "<div>" + sched.routeId +    "</div>"
+							    );
+								
+								$.each(sched.stopRouteDirectionSchedules, function(ind, schedDir) {
+						            $("#entry").append(
+								        "<div>" + ind + schedDir.tripHeadsign + "</div>"
+								    );
+									
+									$.each(schedDir.scheduleStopTimes, function(ind, schedStops) {
+										
+										var arrivalDate = new Date(schedStops.arrivalTime);
+										var departureDate = new Date(schedStops.departureTime);
+										
+							            $("#entry").append(
+									        "<div>" + ind + schedStops.arrivalEnabled + arrivalDate + schedStops.departureEnabled + departureDate + schedStops.serviceId + schedStops.tripId + "</div>" 
+											
+											/*
+<arrivalEnabled>true</arrivalEnabled>
+<arrivalTime>1383547331000</arrivalTime>
+<departureEnabled>true</departureEnabled>
+<departureTime>1383547331000</departureTime>
+<serviceId>MTA_CA_D3-Weekday-SDon</serviceId>
+<tripId>MTA NYCT_CA_D3-Weekday-SDon-009000_S53_301</tripId>
+											*/
+									    );
+									});	
+									
+								});	
+								
+								
+							});	
+							
+						}
+						
+						
+						
+					});
+				}
+			});
+		});
+		</script>
+		
+		<div id="results"></div>
+		<hr>
+		<div id="data"></div>
+		<hr>
+		<div id="entry"></div>
