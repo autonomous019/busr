@@ -1,37 +1,5 @@
 <h1>Agencies</h1>
 
-<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-
-
-<script>
-$.getJSON('http://bustime.mta.info/api/where/routes-for-agency/MTA%20NYCT.json?key=3d264d9a-1aca-48b1-b375-929864bb5079', function(data) {
-  $("#jsondata").text(JSON.stringify(data));
-  alert(data);
-});
-
-
-/*
-$.getJSON( "http://bustime.mta.info/api/where/routes-for-agency/MTA%20NYCT.json?key=3d264d9a-1aca-48b1-b375-929864bb5079", function( data ) {
-  var items = [];
-  $.each( data, function( key, val ) {
-    items.push( "<li id='" + key + "'>" + val + "</li>" );
-  });
- 
-  $( "<ul/>", {
-    "class": "my-new-list",
-    html: items.join( "" )
-  }).appendTo( "div" );
-});
-
-*/
-
-alert("hello");
-</script>
-
-
-
-<div class="jsondata"></div>
-
-<div id="jsondata"></div>
+This section is not yet implemented. Here you will be able to select from multiple Transit Agencies to view route information for each agency.  Currently only NYC MTA data is being used to prototype the app.  Soon multiple transit agencies will be available not just NYC MTA.  
 <p/>
 
