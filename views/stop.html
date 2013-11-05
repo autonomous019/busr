@@ -13,23 +13,9 @@ Stop Longitude: {{stop.lon}}
 <style type="text/css">
       
       #map-canvas { height: 100% ; margin: 0; padding: 0; width: 100%; }
-    </style>
+</style>
 	
-    <!-- <script type="text/javascript"
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyADZBLErUTwzfbch3Xou5_Nz5R956iH7n4&sensor=false">
-    </script> -->
-	<!-- 	
-		<script>
-		document.write([
-		  '<script src="http://maps.googleapis.com/maps?file=api&amp;v=2&amp;key=', {
-		    'domain1.com': 'apikey1',
-		    'domain2.com': 'apikey2',
-		    'domain3.com': 'apikey3',
-		    'domainN.com': 'apikeyN'
-		  }[window.location.host],
-		  '" type="text/javascript"><\/script>'
-		].join(''));
-		</script> -->
+
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
        
 	<script>
@@ -67,7 +53,7 @@ Stop Longitude: {{stop.lon}}
       
 	  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 	  
-	 var transitLayer = new google.maps.TransitLayer();
+	  var transitLayer = new google.maps.TransitLayer();
 	  transitLayer.setMap(map);	 
 	  
 	  var image = '/bus_stop_icon.png';
@@ -78,7 +64,7 @@ Stop Longitude: {{stop.lon}}
 	      '</div>'+
 	      '<h1 id="firstHeading" class="firstHeading">{{stop.name}}</h1>'+
 	      '<div id="bodyContent">'+
-	      '<p><b>{{stop.id}}</b> Bus Travel Direction: {{stop.direction}} Routes: {{stop.routes}} </p>'+
+	      '<p><b>Stop ID: {{stop.id}}</b> <br />Bus Travel Direction: {{stop.direction}} <br />Routes: {{stop.routes}} </p>'+
 	
 		 
 	      '<p>Agency Web, <a href="http://www.mta.info">'+
@@ -88,10 +74,6 @@ Stop Longitude: {{stop.lon}}
 	      '</div>';
 		  
 		  
-
-	
-		  
-
 	  var infowindow = new google.maps.InfoWindow({
 	      content: contentString
 	  });
@@ -102,26 +84,14 @@ Stop Longitude: {{stop.lon}}
 	      title: '{{stop.name}}',
 		  icon: image
 	  });
-	  
-		
    
 	  google.maps.event.addListener(marker, 'click', function() {
 	    infowindow.open(map,marker);
 	  });
-	
-	  
-
-	  
 	  
 	}
 	
-	
-
 	google.maps.event.addDomListener(window, 'load', initialize);
-
-
-
-
 
 </script>
 
@@ -195,10 +165,68 @@ $(document).ready(function(){
 				}
 			});
 		});
+		
+		/*
+		
+		
+		
+		
+		*/
+		
+		
+		$(document).ready(function(){
+			
+			var stopId = '{{stop.id}}';
+			stopId = stopId.split("_");
+			stopId = stopId[1];
+			
+			
+					$.ajax({
+						dataType: "jsonp",
+						url: "http://bustime.mta.info/api/siri/stop-monitoring.json?key=3d264d9a-1aca-48b1-b375-929864bb5079&OperatorRef=MTA&MonitoringRef="+stopId,
+						success: function(data) {
+						    $.each(data, function(index, info) {
+								var monitor = info.ServiceDelivery.StopMonitoringDelivery;
+						        
+							    $.each(monitor, function(index, prog) {
+									var stopVisit = prog.MonitoredStopVisit;
+							       
+								    $.each(stopVisit, function(index, veh) {
+										var vehJourney = veh.MonitoredVehicleJourney
+								        var lineRef = vehJourney.LineRef;
+										var VehicleLocation = vehJourney.VehicleLocation;
+										var VehicleLon = VehicleLocation.Longitude;
+										var VehicleLat = VehicleLocation.Latitude;
+										var VehicleBearing = vehJourney.Bearing;
+										var VehicleProgressRate = vehJourney.ProgressRate;
+										var MonitoredCall = vehJourney.MonitoredCall;
+										var Extensions = MonitoredCall.Extensions.Distances;
+										var CallDistanceAlongRoute = Extensions.CallDistanceAlongRoute;
+										var DistanceFromCall = Extensions.DistanceFromCall;
+										var PresentableDistance = Extensions.PresentableDistance;
+										var StopsFromCall = Extensions.StopsFromCall;
+							            $("#siri").append(
+									        "<div>" + "<b>Next Bus Distance Away:</b> " + DistanceFromCall + " ( " + PresentableDistance +   ") "  + " Stops Away: " +StopsFromCall + "</div>" 
+											
+
+									    );
+										
+									}); //ends prog loop
+								
+								}); //ends info loop
+								
+							}); //ends data loop
+						}
+					});
+				});
 		</script>
+		
+		<div id="siri"></div>
 		
 		<div id="results"></div>
 		
 		<div id="data"></div>
 		
 		<div id="entry"></div>
+		
+		
