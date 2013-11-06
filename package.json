@@ -1,8 +1,12 @@
 {
 	"name": "busr",
 	"subdomain": "busr",
+	"domains": [
+		"busr.info",
+		"www.busr.info"
+	],
 	"description": "Busr Transitor, your transit adaptor",
-	"version": "0.0.1-8",
+	"version": "0.0.1-9",
 	"scripts": {
 		"predeploy": "echo This will be run before deploying the app",
 		"postdeploy": "echo This will be run after deploying the app",

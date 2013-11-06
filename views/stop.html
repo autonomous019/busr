@@ -22,33 +22,11 @@ Stop Longitude: {{stop.lon}}
 	function initialize() {
 	  var myLatlng = new google.maps.LatLng( {{stop.lat}}, {{stop.lon}} );
 	  
-	  var styles = [
-	    {
-	      stylers: [
-	        { hue: "#B88A00" },
-	        { saturation: -20 }
-	      ]
-	    },{
-	      featureType: "road",
-	      elementType: "geometry",
-	      stylers: [
-	        { lightness: 100 },
-	        { visibility: "simplified" }
-	      ]
-	    },{
-	      featureType: "road",
-	      elementType: "labels",
-	      stylers: [
-	        { visibility: "off" }
-	      ]
-	    }
-	  ];
 	  
 	  var mapOptions = {
 	    zoom: 17,
 	    center: myLatlng,
-	    mapTypeId: google.maps.MapTypeId.ROADMAP,
-		styles: styles
+	    mapTypeId: google.maps.MapTypeId.ROADMAP
 	  };
       
 	  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
