@@ -64,6 +64,17 @@ app.get('/map', function(req, res) {
 });
 
 
+//Trip Planning
+app.post('/tripresult', function(req, res){ // Specifies which URL to listen for
+  // req.body -- contains form data
+  res.render('tripresult', {title:"Trip Planning"});
+});
+
+app.get('/trip', function(req, res) {
+	
+	res.render('trip', {title:"Trip Planning"});
+});
+
 
 
 

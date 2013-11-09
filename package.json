@@ -6,7 +6,7 @@
 		"www.busr.info"
 	],
 	"description": "Busr Transitor, your transit adaptor",
-	"version": "0.0.1-9",
+	"version": "0.0.1-11",
 	"scripts": {
 		"predeploy": "echo This will be run before deploying the app",
 		"postdeploy": "echo This will be run after deploying the app",
