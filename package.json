@@ -1,23 +1,26 @@
 {
-	"name": "busr",
-	"subdomain": "busr",
-	"domains": [
-		"busr.info",
-		"www.busr.info"
-	],
-	"description": "Busr Transitor, your transit adaptor",
-	"version": "0.0.1-15",
-	"scripts": {
-		"predeploy": "echo This will be run before deploying the app",
-		"postdeploy": "echo This will be run after deploying the app",
-		"start": "web.js"
-	},
-	"dependencies": {
-		"express": "3.x",
-		"hbs": "*"
-	},
-	"engines": {
-		"node": "0.10.x",
-		"npm": "1.2.x"
-	}
+  "name": "busr",
+  "subdomain": "busr",
+  "domains": [
+    "busr.info",
+    "www.busr.info"
+  ],
+  "description": "Busr Transitor, your transit adaptor",
+  "version": "0.0.1-17",
+  "scripts": {
+    "predeploy": "echo This will be run before deploying the app",
+    "postdeploy": "echo This will be run after deploying the app",
+    "start": "web.js"
+  },
+  "dependencies": {
+    "express": "3.x",
+    "hbs": "*"
+  },
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.2.x"
+  },
+  "devDependencies": {
+    "should": "~2.1.0"
+  }
 }
