@@ -1,14 +1,15 @@
 var express = require('express');
 var app = express();
-
+/*
 app
   .use(express.bodyParser())
   .use(express.cookieParser('busrinf0!!!'))
   .use(express.session())
   .use(everyauth.middleware(app));
+*/
   
 var hbs = require('hbs');
-var everyauth = require('everyauth');
+//var everyauth = require('everyauth');
 
 
 var routesEngine = require('./routes');
