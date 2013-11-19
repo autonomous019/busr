@@ -140,9 +140,6 @@ route_atom.each do |a|
   #put it here
  
   
-  
-  
-  
   route_file_text = "var "+route+"  = ["
   route_file_text += $stops_file_text
    

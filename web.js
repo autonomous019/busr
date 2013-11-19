@@ -14,6 +14,8 @@ var hbs = require('hbs');
 
 var routesEngine = require('./routes');
 var busrEngine = require('./busr');
+var posterEngine = require('./poster');
+
 //var stopsEngine = require('./stops')
 
 app.set('view engine', 'html');
@@ -99,6 +101,29 @@ app.get('/agencies', function(req, res) {
 	res.render('agencies', {title:"Agencies"});
 });
 
+
+
+//Post Delegater
+app.post('/post', function(req, res){ // Specifies which URL to listen for
+  // req.body -- contains form data
+
+  var fname = req.body.fname;
+  var lname = req.body.lname;
+  var email = req.body.email;
+  var message = req.body.message;
+  var mode = req.body.mode;  //all forms need a mode for the post delegator
+  var Poster = require('./poster');
+  var poster_conroller = new Poster();
+  console.log(poster_conroller);
+
+  
+  res.render('post', {title:"Post", fname:fname, lname:lname, message:message, mode:mode});
+});
+
+//Contact
+app.get('/contact', function(req, res) {
+	res.render('contact', {title:"Contact"});
+});
 
 
 
