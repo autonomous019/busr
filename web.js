@@ -105,6 +105,9 @@ app.get('/agencies', function(req, res) {
 
 //Post Delegater
 app.post('/post', function(req, res){ // Specifies which URL to listen for
+
+  //will need to add logic to control mode flow in post.html using handlebars.js
+	
   // req.body -- contains form data
 
   var fname = req.body.fname;
@@ -113,11 +116,12 @@ app.post('/post', function(req, res){ // Specifies which URL to listen for
   var message = req.body.message;
   var mode = req.body.mode;  //all forms need a mode for the post delegator
   var Poster = require('./poster');
-  var poster_conroller = new Poster();
-  console.log(poster_conroller);
+  var poster_conroller = new Poster(req);
+  //console.log(poster_conroller.greetingText());
+  var greeting = poster_conroller.greetingText();
 
   
-  res.render('post', {title:"Post", fname:fname, lname:lname, message:message, mode:mode});
+  res.render('post', {title:"Post", fname:fname, lname:lname, message:message, email: email, mode:mode, greeting:greeting });
 });
 
 //Contact
