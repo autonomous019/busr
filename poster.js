@@ -4,7 +4,6 @@ module.exports = Poster;
 function Poster(req) {
   // always initialize all instance properties
   this.mode = req.body.mode;
-  console.log(req.body.mode);
   this.greeting = "Posting"; 
   
 }

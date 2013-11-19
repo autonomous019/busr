@@ -10,6 +10,7 @@
   "scripts": {
     "predeploy": "echo This will be run before deploying the app",
     "postdeploy": "echo This will be run after deploying the app",
+	 "test": "node_modules/.bin/mocha -w",
     "start": "web.js"
   },
   "dependencies": {
