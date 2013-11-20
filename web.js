@@ -119,6 +119,7 @@ app.post('/post', function(req, res){ // Specifies which URL to listen for
   var poster_conroller = new Poster(req);
   //console.log(poster_conroller.greetingText());
   var greeting = poster_conroller.greetingText();
+  //var fileUpdate = poster_controller.writeContact(req.body);
 
   
   res.render('post', {title:"Post", fname:fname, lname:lname, message:message, email: email, mode:mode, greeting:greeting });
