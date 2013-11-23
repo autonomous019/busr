@@ -6,11 +6,11 @@
     "www.busr.info"
   ],
   "description": "Busr Transitor, your transit adaptor",
-  "version": "0.0.1-18",
+  "version": "0.0.1-19",
   "scripts": {
     "predeploy": "echo This will be run before deploying the app",
     "postdeploy": "echo This will be run after deploying the app",
-	 "test": "node_modules/.bin/mocha -w",
+    "test": "node_modules/.bin/mocha -w",
     "start": "web.js"
   },
   "dependencies": {
