@@ -90,16 +90,24 @@ module GTFS
       
       def filter_list(model_name)
         #get list of attributes per model
-        #agencies
-          #   :name, :url, :timezone, :id, :lang, :phone, :fare_url
-        
-        #stops
-          # :id, :name, :lat, :lon, :code, :desc, :zone_id, :url, :location_type, :parent_station, :timezone, :wheelchair_boarding
     
           modeler = model_name.to_s
+          #puts "Modeler "+modeler
           result = case modeler
              when 'agency_' then return "name url timezone id lang phone fare_url"
              when 'stops_' then return "id name lat lon code desc zone_id url location_type parent_station timezone wheelchair_boarding"
+             when 'calendar_date_' then return "service_id date exception_type"
+             when 'calendar_' then return "service_id monday tuesday wednesday thursday friday saturday sunday start_date end_date"
+             when 'fare_attribute_' then return "fare_id price currency_type payment_method transfer_duration transfers"
+             when 'fare_rule_' then return "fare_id route_id origin_id destination_id contains_id"
+             when 'frequency_' then return "trip_id start_time end_time headway_secs exact_times"
+             when 'route_' then return "id short_name long_name type agency_id desc url color text_color"
+             when 'shape_' then return "id pt_lat pt_lon pt_sequence dist_traveled"
+             when 'stop_time_' then return "trip_id arrival_time departure_time stop_id stop_sequence stop_headsign pickup_type drop_off_type shape_dist_traveled"
+             when 'stop_' then return "id name lat lon code desc zone_id url location_type parent_station timezone wheelchair_boarding"
+             when 'transfer_' then return "from_stop_id to_stop_id type min_transfer_time"
+             when 'trip_' then return "route_id service_id id headsign short_name direction_id block_id shape_id wheelchair_accessible"
+             
              
              else 
                return "Invalid Filter"
@@ -110,47 +118,72 @@ module GTFS
 
       def parse_model(attr_hash, options={})
          unprefixed_attr_hash = {}
+         $var_hash = Hash.new( self.class_variable_get('@@prefix') )
+         $filter_list_arr = Array.new
+         f_title_list = Array.new
+         
          attr_hash.each do |key, val|
            #puts key
-         
-             #interrogate for what prefix is used to get list of attributes for given model
+           #interrogate for what prefix is used to get list of attributes for given model
              model_name = self.class_variable_get('@@prefix')
              #puts model_name
              filter_list = self.filter_list(model_name)
-             filter_list_arr = filter_list.split(" ")
-         
+             $filter_list_arr = filter_list.split(" ")
+            
              #then assign values to right keys, dynamic key interrogation and dynamic value assignment
-             var_hash = Hash.new(  )
              
-             filter_list_arr.each do |f|
-                 #puts f
-                 var_arr =  Array.new #change this to a hash array or map
-                 
+             $filter_list_arr.each do |f|
+               #puts "f "+f
+               f_title = self.class_variable_get('@@prefix').to_s+f.to_s
+               if(!f_title_list.include?(f_title))
+                   f_title_list.push(f_title)
+               end
                  model_name_key = "#{model_name}#{f}"
-                 
+                 $model_name_key_arr = Array.new
+                 $model_name_key_arr.push(model_name_key)
                  
                  if(key.to_s === model_name_key.to_s)
-                   #puts model_name_key.to_s + " | " + key.to_s
                      #push to an key/value pair
-                     model_name_key_val = val.to_s
-                     var_arr.push(model_name_key_val)
-                     var_hash[key.to_s] = val.to_s
+                     $var_hash[key.to_s] = val.to_s
+                
                  end
-                 #puts var_arr
-                 
-         
+                
              end
-             puts var_hash
+             #puts var_hash
              
-         #handle writing to redis 
-         #redis = Redis.new()
-         #redis.hmset('agency_id:'+agency_id, 'agency_name', agency_name   )
-         
-
-          
-          unprefixed_attr_hash[key.gsub(/^#{prefix}/, '')] = val
+            
+         unprefixed_attr_hash[key.gsub(/^#{prefix}/, '')] = val
         end
-
+        
+        filled_keys_arr = $var_hash.keys
+        puts "hash keys "+filled_keys_arr.to_s
+        puts "f_title list "+f_title_list.to_s
+        
+        findings = f_title_list - filled_keys_arr 
+        puts "findings "+findings.to_s
+        
+        #take array from findings and add to $var_hash with value = nil
+        findings.each do |x|
+          $var_hash[x] = ""
+        end
+        #puts "final hash to redis" + $var_hash.to_s
+        
+        #now send to redis update the agencies string list of all agencies by agency_name and create agency, stop, etc hashes as needed.  
+    #handle writing to redis create a redis handler function different models will need different redis structs
+        redis = Redis.new()
+   
+        $var_hash.each do |key, val|
+          if (key === 'agency_name')
+            agency_name = val
+            redis.hmset('agency:'+agency_name, 'data', $var_hash   )
+            puts redis.hgetall('agency:'+agency_name)
+          end
+      
+       end
+    
+    
+   
+    
         model = self.new(unprefixed_attr_hash)
       end #end filter method
       
