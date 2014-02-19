@@ -156,11 +156,11 @@ module GTFS
         end
         
         filled_keys_arr = $var_hash.keys
-        puts "hash keys "+filled_keys_arr.to_s
-        puts "f_title list "+f_title_list.to_s
+        #puts "hash keys "+filled_keys_arr.to_s
+        #puts "f_title list "+f_title_list.to_s
         
         findings = f_title_list - filled_keys_arr 
-        puts "findings "+findings.to_s
+        #puts "findings "+findings.to_s
         
         #take array from findings and add to $var_hash with value = nil
         findings.each do |x|
@@ -171,12 +171,27 @@ module GTFS
         #now send to redis update the agencies string list of all agencies by agency_name and create agency, stop, etc hashes as needed.  
     #handle writing to redis create a redis handler function different models will need different redis structs
         redis = Redis.new()
-   
+        
         $var_hash.each do |key, val|
           if (key === 'agency_name')
+            
             agency_name = val
             redis.hmset('agency:'+agency_name, 'data', $var_hash   )
             puts redis.hgetall('agency:'+agency_name)
+            $agency_id = agency_name
+          end
+          
+          if (key === 'route_id')
+            route_id = val
+            redis.hmset($agency_id+':route_'+route_id, 'data', $var_hash   )
+            puts redis.hgetall($agency_id+':route_'+route_id)
+          end
+          
+          
+          if (key === 'stop_id')
+            stop_id = val
+            redis.hmset($agency_id+':stop_'+stop_id, 'data', $var_hash   )
+            puts redis.hgetall($agency_id+':stop_'+stop_id)
           end
       
        end
