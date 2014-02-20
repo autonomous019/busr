@@ -199,6 +199,13 @@ module GTFS
             redis.hmset($agency_id+':trip_'+trip_id, 'data', $var_hash   )
             puts redis.hgetall($agency_id+':trip_'+trip_id)
           end
+          
+          #stop times needs dubugged
+          if (key === 'stop_times_trip_id')
+            stop_times_trip_id = val
+            redis.hmset($agency_id+':stop_times_'+stop_times_trip_id, 'data', $var_hash   )
+            puts redis.hgetall($agency_id+':stop_times_'+stop_times_trip_id)
+          end
       
        end
     

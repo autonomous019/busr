@@ -6,6 +6,7 @@ module GTFS
     has_optional_attrs :stop_headsign, :pickup_type, :drop_off_type, :shape_dist_traveled
     attr_accessor *attrs
 
+    column_prefix :stop_times_
     collection_name :stop_times
     required_file true
     uses_filename 'stop_times.txt'

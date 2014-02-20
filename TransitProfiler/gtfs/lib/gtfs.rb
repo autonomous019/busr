@@ -52,9 +52,9 @@ agency_uri.each do |au|
   #routes = source.routes
   #stops = source.stops
   #trips =source.trips
-  stop_times = source.stop_times
+  #stop_times = source.stop_times
   #source.calendars
-  #source.calendar_dates     
+  source.calendar_dates     
   #source.fare_attributes    
   #source.fare_rules         
   #source.shapes

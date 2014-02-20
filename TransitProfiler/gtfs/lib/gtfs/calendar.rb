@@ -5,6 +5,8 @@ module GTFS
     has_required_attrs :service_id, :monday, :tuesday, :wednesday, :thursday, :friday, :saturday, :sunday, :start_date, :end_date
     attr_accessor *attrs
 
+
+    column_prefix :calendars_
     collection_name :calendars
     required_file true
     uses_filename 'calendar.txt'
