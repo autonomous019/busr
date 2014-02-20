@@ -6,7 +6,7 @@ module GTFS
     attr_accessor *attrs
 
 
-    column_prefix :calendars_
+    column_prefix :calendar_
     collection_name :calendars
     required_file true
     uses_filename 'calendar.txt'

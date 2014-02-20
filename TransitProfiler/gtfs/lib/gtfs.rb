@@ -48,17 +48,17 @@ agency_uri.each do |au|
   puts
   puts "#{au}"
   source = GTFS::Source.build(au)
-  agencies = source.agencies
+  agencies = source.agencies #REQUIRED TO RUN if you just are going for one particular file model you need model file plus agencies
   #routes = source.routes
   #stops = source.stops
   #trips =source.trips
-  #stop_times = source.stop_times
-  #source.calendars
-  source.calendar_dates     
-  #source.fare_attributes    
+  #stop_times = source.stop_times 
+  #source.calendars  
+  #source.calendar_dates     
+  #source.fare_attributes   
   #source.fare_rules         
-  #source.shapes
-  #source.frequencies        
+  source.shapes
+  #source.frequencies  #debug only headers in txt file no data need to confirm it works     
   #source.transfers 
   
 end

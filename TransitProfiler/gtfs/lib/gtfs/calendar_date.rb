@@ -4,7 +4,8 @@ module GTFS
 
     has_required_attrs :service_id, :date, :exception_type
     attr_accessor *attrs
-
+    
+    column_prefix :calendar_date_
     collection_name :calendar_dates
     required_file true
     uses_filename 'calendar_dates.txt'

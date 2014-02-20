@@ -6,6 +6,7 @@ module GTFS
     has_optional_attrs :dist_traveled
     attr_accessor *attrs
 
+    
     collection_name :shapes
     required_file false
     uses_filename 'shapes.txt'

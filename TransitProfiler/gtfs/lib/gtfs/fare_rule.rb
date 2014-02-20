@@ -6,6 +6,7 @@ module GTFS
     has_optional_attrs :route_id, :origin_id, :destination_id, :contains_id
     attr_accessor *attrs
 
+    column_prefix :fare_rule_
     collection_name :fare_rules
     required_file false
     uses_filename 'fare_rules.txt'

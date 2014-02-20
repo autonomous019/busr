@@ -6,6 +6,7 @@ module GTFS
     has_optional_attrs :exact_times
     attr_accessor *attrs
 
+    column_prefix :frequency_
     collection_name :frequencies
     required_file false
     uses_filename 'frequencies.txt'

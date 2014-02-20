@@ -103,7 +103,7 @@ module GTFS
              when 'frequency_' then return "trip_id start_time end_time headway_secs exact_times"
              when 'route_' then return "id short_name long_name type agency_id desc url color text_color"
              when 'shape_' then return "id pt_lat pt_lon pt_sequence dist_traveled"
-             when 'stop_times_' then return "trip_id arrival_time departure_time stop_id stop_sequence stop_headsign pickup_type drop_off_type shape_dist_traveled"
+             when 'stop_time_' then return "trip_id arrival_time departure_time stop_id stop_sequence stop_headsign pickup_type drop_off_type shape_dist_traveled"
              when 'stop_' then return "id name lat lon code desc zone_id url location_type parent_station timezone wheelchair_boarding"
              when 'transfer_' then return "from_stop_id to_stop_id type min_transfer_time"
              when 'trip_' then return "route_id service_id id headsign short_name direction_id block_id shape_id wheelchair_accessible"
@@ -125,20 +125,32 @@ module GTFS
          attr_hash.each do |key, val|
            #puts key
            #interrogate for what prefix is used to get list of attributes for given model
-             model_name = self.class_variable_get('@@prefix')
-             puts model_name
-             filter_list = self.filter_list(model_name)
+             $model_name = self.class_variable_get('@@prefix')
+             #puts $model_name
+             filter_list = self.filter_list($model_name)
              $filter_list_arr = filter_list.split(" ")
             
              #then assign values to right keys, dynamic key interrogation and dynamic value assignment
              
              $filter_list_arr.each do |f|
                #puts "f "+f
-               f_title = self.class_variable_get('@@prefix').to_s+f.to_s
+               #some models have in the txt files headings "agency_id" some have no agency_ it may be trip_id with no agency_trip_id in those cases whe don't want the full model name just the header
+               if($model_name.to_s === 'stop_time_' || $model_name.to_s === 'calendar_' || $model_name.to_s === 'calendar_date_'  || $model_name.to_s === 'fare_attribute_' || $model_name.to_s === 'fare_rule_'  || $model_name.to_s === 'frequency_'  || $model_name.to_s === 'transfer_' )
+                 #for cases when you just need a generic "trip_id" without a model qualifier in the gtfs text file header
+                   f_title = f.to_s
+                   model_name_key = "#{f}"
+               else
+                 #for cases like "agency_id" for agency_ model where headers are like "agency_id, agency_name, etc"
+                   f_title = $model_name.to_s+f.to_s
+                   model_name_key = "#{$model_name}#{f}"
+               end
+               
                if(!f_title_list.include?(f_title))
                    f_title_list.push(f_title)
                end
-                 model_name_key = "#{model_name}#{f}"
+               
+               
+               
                  $model_name_key_arr = Array.new
                  $model_name_key_arr.push(model_name_key)
                  
@@ -156,11 +168,11 @@ module GTFS
         end
         
         filled_keys_arr = $var_hash.keys
-        puts "hash keys "+filled_keys_arr.to_s
-        puts "f_title list "+f_title_list.to_s
+        #puts "hash keys "+filled_keys_arr.to_s
+        #puts "f_title list "+f_title_list.to_s
         
         findings = f_title_list - filled_keys_arr 
-        puts "findings "+findings.to_s
+        #puts "findings "+findings.to_s
         
         #take array from findings and add to $var_hash with value = nil
         findings.each do |x|
@@ -173,7 +185,7 @@ module GTFS
         redis = Redis.new()
         
         $var_hash.each do |key, val|
-          if (key === 'agency_name')
+          if (key === 'agency_name'  && $model_name.to_s === 'agency_' )
             
             agency_name = val
             redis.hmset('agency:'+agency_name, 'data', $var_hash   )
@@ -181,30 +193,74 @@ module GTFS
             $agency_id = agency_name
           end
           
-          if (key === 'route_id')
+          if (key === 'route_id'   && $model_name.to_s === 'route_')
             route_id = val
             redis.hmset($agency_id+':route_'+route_id, 'data', $var_hash   )
             puts redis.hgetall($agency_id+':route_'+route_id)
           end
           
           
-          if (key === 'stop_id')
+          if (key === 'stop_id'   && $model_name.to_s === 'stop_')
             stop_id = val
             redis.hmset($agency_id+':stop_'+stop_id, 'data', $var_hash   )
             puts redis.hgetall($agency_id+':stop_'+stop_id)
           end
           
-          if (key === 'trip_id')
+          if (key === 'trip_id'   && $model_name.to_s === 'trip_')
             trip_id = val
             redis.hmset($agency_id+':trip_'+trip_id, 'data', $var_hash   )
             puts redis.hgetall($agency_id+':trip_'+trip_id)
           end
           
-          #stop times needs dubugged
-          if (key === 'stop_times_trip_id')
-            stop_times_trip_id = val
-            redis.hmset($agency_id+':stop_times_'+stop_times_trip_id, 'data', $var_hash   )
-            puts redis.hgetall($agency_id+':stop_times_'+stop_times_trip_id)
+
+          if (key === 'stop_time_trip_id' && $model_name.to_s === 'stop_time_')
+            stop_time_trip_id = val
+            redis.hmset($agency_id+':stop_times_'+stop_time_trip_id, 'data', $var_hash   )
+            puts redis.hgetall($agency_id+':stop_times_'+stop_time_trip_id)
+          end
+          
+
+          if (key === 'service_id' && $model_name.to_s === 'calendar_')
+            service_id = val
+            redis.hmset($agency_id+':calendar_'+service_id, 'data', $var_hash   )
+            puts redis.hgetall($agency_id+':calendar_'+service_id)
+          end
+          
+          if (key === 'service_id' && $model_name.to_s === 'calendar_date_')
+            service_id = val
+            redis.hmset($agency_id+':calendar_date_'+service_id, 'data', $var_hash   )
+            puts redis.hgetall($agency_id+':calendar_date_'+service_id)
+          end
+          
+          if (key === 'fare_id' && $model_name.to_s === 'fare_attribute_')
+            fare_id = val
+            redis.hmset($agency_id+':fare_attribute_'+fare_id, 'data', $var_hash   )
+            puts redis.hgetall($agency_id+':fare_attribute_'+fare_id)
+          end
+          
+          if (key === 'fare_id' && $model_name.to_s === 'fare_rule_')
+            fare_id = val
+            redis.hmset($agency_id+':fare_rule_'+fare_id, 'data', $var_hash   )
+            puts redis.hgetall($agency_id+':fare_rule_'+fare_id)
+          end
+          
+          if (key === 'trip_id' && $model_name.to_s === 'frequency_')
+            trip_id = val
+            redis.hmset($agency_id+':frequency_'+trip_id, 'data', $var_hash   )
+            puts redis.hgetall($agency_id+':frequency_'+trip_id)
+          end
+          
+          if (key === 'from_stop_id' && $model_name.to_s === 'transfer_')
+            from_stop_id = val
+            redis.hmset($agency_id+':transfer_'+from_stop_id, 'data', $var_hash   )
+            puts redis.hgetall($agency_id+':transfer_'+from_stop_id)
+          end
+          
+
+          if (key === 'shape_pt_sequence')
+            shape_pt_sequence = val
+            redis.hmset($agency_id+':shapes_'+shape_pt_sequence, 'data', $var_hash   )
+            puts redis.hgetall($agency_id+':shapes_'+shape_pt_sequence)
           end
       
        end
