@@ -103,7 +103,7 @@ module GTFS
              when 'frequency_' then return "trip_id start_time end_time headway_secs exact_times"
              when 'route_' then return "id short_name long_name type agency_id desc url color text_color"
              when 'shape_' then return "id pt_lat pt_lon pt_sequence dist_traveled"
-             when 'stop_time_' then return "trip_id arrival_time departure_time stop_id stop_sequence stop_headsign pickup_type drop_off_type shape_dist_traveled"
+             when 'stop_times_' then return "trip_id arrival_time departure_time stop_id stop_sequence stop_headsign pickup_type drop_off_type shape_dist_traveled"
              when 'stop_' then return "id name lat lon code desc zone_id url location_type parent_station timezone wheelchair_boarding"
              when 'transfer_' then return "from_stop_id to_stop_id type min_transfer_time"
              when 'trip_' then return "route_id service_id id headsign short_name direction_id block_id shape_id wheelchair_accessible"
@@ -126,7 +126,7 @@ module GTFS
            #puts key
            #interrogate for what prefix is used to get list of attributes for given model
              model_name = self.class_variable_get('@@prefix')
-             #puts model_name
+             puts model_name
              filter_list = self.filter_list(model_name)
              $filter_list_arr = filter_list.split(" ")
             
@@ -156,11 +156,11 @@ module GTFS
         end
         
         filled_keys_arr = $var_hash.keys
-        #puts "hash keys "+filled_keys_arr.to_s
-        #puts "f_title list "+f_title_list.to_s
+        puts "hash keys "+filled_keys_arr.to_s
+        puts "f_title list "+f_title_list.to_s
         
         findings = f_title_list - filled_keys_arr 
-        #puts "findings "+findings.to_s
+        puts "findings "+findings.to_s
         
         #take array from findings and add to $var_hash with value = nil
         findings.each do |x|
@@ -192,6 +192,12 @@ module GTFS
             stop_id = val
             redis.hmset($agency_id+':stop_'+stop_id, 'data', $var_hash   )
             puts redis.hgetall($agency_id+':stop_'+stop_id)
+          end
+          
+          if (key === 'trip_id')
+            trip_id = val
+            redis.hmset($agency_id+':trip_'+trip_id, 'data', $var_hash   )
+            puts redis.hgetall($agency_id+':trip_'+trip_id)
           end
       
        end

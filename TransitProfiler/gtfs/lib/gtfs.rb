@@ -37,7 +37,7 @@ require 'gtfs/local_source'
 redis = Redis.new()
 
 agency_uri = Array.new
-agency_uri << 'files/intercity-transit_20140107_0555.zip' #olympia
+#agency_uri << 'files/intercity-transit_20140107_0555.zip' #olympia
 agency_uri << 'files/humboldt-archiver_20140107_0650.zip' #eureka/arcata
 #agency_uri << 'files/mts_20140208_0134.zip' #san diego
 #agency_uri << 'http://www.intercitytransit.com/googledata/google_transit.zip'
@@ -49,10 +49,10 @@ agency_uri.each do |au|
   puts "#{au}"
   source = GTFS::Source.build(au)
   agencies = source.agencies
-  routes = source.routes
+  #routes = source.routes
   #stops = source.stops
-  trips =source.trips
-  #stop_times = source.stop_times
+  #trips =source.trips
+  stop_times = source.stop_times
   #source.calendars
   #source.calendar_dates     
   #source.fare_attributes    
