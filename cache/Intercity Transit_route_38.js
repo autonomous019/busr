@@ -1,0 +1,1 @@
+{"route_id"=>"38", "route_short_name"=>"612", "route_long_name"=>"Lacey\\Tacoma", "route_type"=>"3", "route_agency_id"=>"", "route_desc"=>"", "route_url"=>"", "route_color"=>"", "route_text_color"=>""}

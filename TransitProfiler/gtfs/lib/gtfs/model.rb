@@ -83,6 +83,10 @@ module GTFS
 
       def each(filename)
         CSV.foreach(filename, :headers => true) do |row|
+          require 'json'
+          # => true
+          
+          
           yield parse_model(row.to_hash)
         end
       end
@@ -117,12 +121,17 @@ module GTFS
       
 
       def parse_model(attr_hash, options={})
+        
+         file_text = attr_hash.to_json
+         #model_data = Hash.new( self.class_variable_get('@@prefix').to_s+"master" )
+         $model_data = Array.new
          unprefixed_attr_hash = {}
          $var_hash = Hash.new( self.class_variable_get('@@prefix') )
          $filter_list_arr = Array.new
          f_title_list = Array.new
          
          attr_hash.each do |key, val|
+           
            #puts key
            #interrogate for what prefix is used to get list of attributes for given model
              $model_name = self.class_variable_get('@@prefix')
@@ -167,6 +176,15 @@ module GTFS
          unprefixed_attr_hash[key.gsub(/^#{prefix}/, '')] = val
         end
         
+        
+        
+        #model_data.push($var_hash) 
+        #puts model_data.length
+        #model_data.each do |md|
+        #  puts md
+        #end
+        
+        
         filled_keys_arr = $var_hash.keys
         #puts "hash keys "+filled_keys_arr.to_s
         #puts "f_title list "+f_title_list.to_s
@@ -180,6 +198,11 @@ module GTFS
         end
         #puts "final hash to redis" + $var_hash.to_s
         
+        
+         #$model_data.push($var_hash)
+        
+        
+        
         #now send to redis update the agencies string list of all agencies by agency_name and create agency, stop, etc hashes as needed.  
     #handle writing to redis create a redis handler function different models will need different redis structs
         redis = Redis.new()
@@ -188,89 +211,114 @@ module GTFS
           if (key === 'agency_name'  && $model_name.to_s === 'agency_' )
             
             agency_name = val
-            redis.hmset('agency:'+agency_name, 'data', $var_hash   )
-            puts redis.hgetall('agency:'+agency_name)
+            #redis.hmset('agency:'+agency_name, 'data', $var_hash   )
+            #puts redis.hgetall('agency:'+agency_name)
             $agency_id = agency_name
+            
           end
           
           if (key === 'route_id'   && $model_name.to_s === 'route_')
             route_id = val
-            redis.hmset($agency_id+':route_'+route_id, 'data', $var_hash   )
-            puts redis.hgetall($agency_id+':route_'+route_id)
+            #redis.hmset($agency_id+':route_'+route_id, 'data', $var_hash   )
+            #puts redis.hgetall($agency_id+':route_'+route_id)
+            #puts $var_hash
+            cache_writer($agency_id, '', $model_name.to_s, file_text)
+            #puts $model_data
           end
           
           
           if (key === 'stop_id'   && $model_name.to_s === 'stop_')
             stop_id = val
-            redis.hmset($agency_id+':stop_'+stop_id, 'data', $var_hash   )
-            puts redis.hgetall($agency_id+':stop_'+stop_id)
+            #redis.hmset($agency_id+':stop_'+stop_id, 'data', $var_hash   )
+            #puts redis.hgetall($agency_id+':stop_'+stop_id)
           end
           
           if (key === 'trip_id'   && $model_name.to_s === 'trip_')
             trip_id = val
-            redis.hmset($agency_id+':trip_'+trip_id, 'data', $var_hash   )
-            puts redis.hgetall($agency_id+':trip_'+trip_id)
+            #redis.hmset($agency_id+':trip_'+trip_id, 'data', $var_hash   )
+            #puts redis.hgetall($agency_id+':trip_'+trip_id)
           end
           
 
           if (key === 'stop_time_trip_id' && $model_name.to_s === 'stop_time_')
             stop_time_trip_id = val
-            redis.hmset($agency_id+':stop_times_'+stop_time_trip_id, 'data', $var_hash   )
-            puts redis.hgetall($agency_id+':stop_times_'+stop_time_trip_id)
+            #redis.hmset($agency_id+':stop_times_'+stop_time_trip_id, 'data', $var_hash   )
+            #puts redis.hgetall($agency_id+':stop_times_'+stop_time_trip_id)
           end
           
 
           if (key === 'service_id' && $model_name.to_s === 'calendar_')
             service_id = val
-            redis.hmset($agency_id+':calendar_'+service_id, 'data', $var_hash   )
-            puts redis.hgetall($agency_id+':calendar_'+service_id)
+            #redis.hmset($agency_id+':calendar_'+service_id, 'data', $var_hash   )
+            #puts redis.hgetall($agency_id+':calendar_'+service_id)
           end
           
           if (key === 'service_id' && $model_name.to_s === 'calendar_date_')
             service_id = val
-            redis.hmset($agency_id+':calendar_date_'+service_id, 'data', $var_hash   )
-            puts redis.hgetall($agency_id+':calendar_date_'+service_id)
+            #redis.hmset($agency_id+':calendar_date_'+service_id, 'data', $var_hash   )
+            #puts redis.hgetall($agency_id+':calendar_date_'+service_id)
           end
           
           if (key === 'fare_id' && $model_name.to_s === 'fare_attribute_')
             fare_id = val
-            redis.hmset($agency_id+':fare_attribute_'+fare_id, 'data', $var_hash   )
-            puts redis.hgetall($agency_id+':fare_attribute_'+fare_id)
+            #redis.hmset($agency_id+':fare_attribute_'+fare_id, 'data', $var_hash   )
+            #puts redis.hgetall($agency_id+':fare_attribute_'+fare_id)
           end
           
           if (key === 'fare_id' && $model_name.to_s === 'fare_rule_')
             fare_id = val
-            redis.hmset($agency_id+':fare_rule_'+fare_id, 'data', $var_hash   )
-            puts redis.hgetall($agency_id+':fare_rule_'+fare_id)
+            #redis.hmset($agency_id+':fare_rule_'+fare_id, 'data', $var_hash   )
+            #puts redis.hgetall($agency_id+':fare_rule_'+fare_id)
           end
           
           if (key === 'trip_id' && $model_name.to_s === 'frequency_')
             trip_id = val
-            redis.hmset($agency_id+':frequency_'+trip_id, 'data', $var_hash   )
-            puts redis.hgetall($agency_id+':frequency_'+trip_id)
+            #redis.hmset($agency_id+':frequency_'+trip_id, 'data', $var_hash   )
+            #puts redis.hgetall($agency_id+':frequency_'+trip_id)
           end
           
           if (key === 'from_stop_id' && $model_name.to_s === 'transfer_')
             from_stop_id = val
-            redis.hmset($agency_id+':transfer_'+from_stop_id, 'data', $var_hash   )
-            puts redis.hgetall($agency_id+':transfer_'+from_stop_id)
+            #redis.hmset($agency_id+':transfer_'+from_stop_id, 'data', $var_hash   )
+            #puts redis.hgetall($agency_id+':transfer_'+from_stop_id)
           end
           
 
           if (key === 'shape_pt_sequence')
             shape_pt_sequence = val
-            redis.hmset($agency_id+':shapes_'+shape_pt_sequence, 'data', $var_hash   )
-            puts redis.hgetall($agency_id+':shapes_'+shape_pt_sequence)
+            #redis.hmset($agency_id+':shapes_'+shape_pt_sequence, 'data', $var_hash   )
+            #puts redis.hgetall($agency_id+':shapes_'+shape_pt_sequence)
           end
-      
+          
+          
+         
+       
        end
+       # append to file line by line using cache_writer 
+       
     
-    
-   
-    
+        
+        #cache_writer($agency_id, shape_pt_sequence, $model_name, $var_hash)
         model = self.new(unprefixed_attr_hash)
       end #end filter method
       
+
+
+      def cache_writer(agency_id, id, model, file_text)
+        #id here should be some unique id per item row in a given model struct
+        begin
+          file = File.open("../../../cache/"+agency_id+"_"+model+""+id+".js", "a+")
+          file.write(file_text) 
+        rescue IOError => e
+          #some error occur, dir not writable etc.
+        ensure
+          file.close unless file == nil
+        end
+        
+        
+      end
+
+
 
       def parse_models(data, options={})
         return [] if data.nil? || data.empty?

@@ -1,0 +1,1 @@
+{"route_id"=>"13", "route_short_name"=>"62A", "route_long_name"=>"Martin Way/Meridian", "route_type"=>"3", "route_agency_id"=>"", "route_desc"=>"", "route_url"=>"", "route_color"=>"", "route_text_color"=>""}

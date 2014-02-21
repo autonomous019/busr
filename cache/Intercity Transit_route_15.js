@@ -1,0 +1,1 @@
+{"route_id"=>"15", "route_short_name"=>"64", "route_long_name"=>"College St/Amtrak", "route_type"=>"3", "route_agency_id"=>"", "route_desc"=>"", "route_url"=>"", "route_color"=>"", "route_text_color"=>""}

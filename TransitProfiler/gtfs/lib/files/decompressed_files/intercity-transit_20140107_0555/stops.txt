@@ -9,7 +9,7 @@ stop_id,stop_name,stop_lat,stop_lon,location_type
 8,Capitol at 24th [sb],47.027458,-122.900909,0
 9,Capitol at Eskridge [sb],47.023491,-122.896332,0
 10,Capitol at Carlyon [sb],47.020679,-122.897346,0
-11,Capitol at "E" [sb],47.011021,-122.905289,0
+11,Capitol at \"E\" [sb],47.011021,-122.905289,0
 12,Capitol at Linwood [sb],47.007477,-122.90731,0
 13,Linwood at S. 6th [wb],47.007339,-122.912041,0
 14,Linwood at Liberty [wb],47.007389,-122.9216,0
@@ -45,7 +45,7 @@ stop_id,stop_name,stop_lat,stop_lon,location_type
 44,Linwood at Lake Park [eb],47.007263,-122.916656,0
 45,Linwood at S. 6th [eb],47.007206,-122.912399,0
 46,Capitol at Linwood [nb],47.007397,-122.90696,0
-47,Capitol at "E" [nb],47.012138,-122.904282,0
+47,Capitol at \"E\" [nb],47.012138,-122.904282,0
 48,Tumwater Square [nb],47.018047,-122.898529,0
 49,Capitol at Carlyon [nb],47.020672,-122.897186,0
 50,Capitol at Eskridge [nb],47.023327,-122.895828,0
@@ -62,8 +62,8 @@ stop_id,stop_name,stop_lat,stop_lon,location_type
 62,Capitol at Israel [nb],46.986286,-122.907394,0
 63,Capitol at Dennis [nb],46.988609,-122.90757,0
 64,Capitol at Courtyard Plaza [nb],46.991398,-122.907547,0
-65,Capitol and "W" [nb],46.993717,-122.907478,0
-66,Capitol at "U" [nb],46.99522,-122.907471,0
+65,Capitol and \"W\" [nb],46.993717,-122.907478,0
+66,Capitol at \"U\" [nb],46.99522,-122.907471,0
 67,Capitol and E Lee [nb],46.997578,-122.907608,0
 68,Capitol at Capitol 5000 [nb],47.002338,-122.909615,0
 69,Farmers Market,47.050179,-122.902603,0
@@ -80,9 +80,9 @@ stop_id,stop_name,stop_lat,stop_lon,location_type
 80,Tumwater High School [wb],46.985531,-122.91629,0
 81,Custer at Schmidt [wb],47.016781,-122.902512,0
 82,S. 2nd at Division [sb],47.015026,-122.906807,0
-83,S. 2nd at "C" [sb],47.013714,-122.906845,0
-84,S. 2nd at "I" [sb],47.008087,-122.908661,0
-85,S. 7th at "I" [nb],47.008842,-122.912842,0
+83,S. 2nd at \"C\" [sb],47.013714,-122.906845,0
+84,S. 2nd at \"I\" [sb],47.008087,-122.908661,0
+85,S. 7th at \"I\" [nb],47.008842,-122.912842,0
 86,Barnes at Vista [nb],47.015472,-122.915138,0
 87,Barnes at Ridgeview [nb],47.01899,-122.922569,0
 88,SPSCC,47.02322,-122.929222,0
@@ -97,9 +97,9 @@ stop_id,stop_name,stop_lat,stop_lon,location_type
 101,Barnes at Ridgeview [sb],47.017628,-122.920486,0
 102,Barnes at Overlook Park [sb],47.016403,-122.918152,0
 103,Barnes at Vista [sb],47.015278,-122.915154,0
-104,S. 7th at "I" [sb],47.008472,-122.913048,0
-105,S. 2nd at "I" [nb],47.00798,-122.908585,0
-106,S. 2nd at "C" [nb],47.013779,-122.906677,0
+104,S. 7th at \"I\" [sb],47.008472,-122.913048,0
+105,S. 2nd at \"I\" [nb],47.00798,-122.908585,0
+106,S. 2nd at \"C\" [nb],47.013779,-122.906677,0
 107,S. 2nd at Division [nb],47.015377,-122.906654,0
 108,Custer at Schmidt [eb],47.016659,-122.902924,0
 109,North at Masonic Cemetery [eb],47.016563,-122.896492,0
@@ -752,7 +752,7 @@ stop_id,stop_name,stop_lat,stop_lon,location_type
 784,Crosby at Westbury Lane [nb],47.020882,-122.926132,0
 785,Barnes at Blue Sky [nb],47.01651,-122.918335,0
 786,Kaiser at Driftwood [wb],47.072102,-122.95575,0
-787,Linwood at "G" [wb],47.00737,-122.916389,0
+787,Linwood at \"G\" [wb],47.00737,-122.916389,0
 788,Yelm Ave at 3rd [nb],46.940556,-122.603867,0
 789,Sleater Kinney at 21st [nb],47.028259,-122.833702,0
 790,Israel at Linderson [eb],46.985336,-122.920609,0
@@ -847,8 +847,8 @@ stop_id,stop_name,stop_lat,stop_lon,location_type
 887,Martin Way at Kinwood [wb],47.051441,-122.791901,0
 889,21st and Black Lake Apts [wb],47.029034,-122.94223,0
 890,North at Henderson [wb],47.016636,-122.879791,0
-891,S. 2nd at "F" [sb],47.011009,-122.906807,0
-892,S. 2nd at "F' [nb],47.011539,-122.906647,0
+891,S. 2nd at \"F\" [sb],47.011009,-122.906807,0
+892,S. 2nd at \"F' [nb],47.011539,-122.906647,0
 893,Tumwater Square [sb],47.018105,-122.898788,0
 894,State Capitol Building [sb],47.036331,-122.90387,0
 895,General Administration Building [wb],47.038109,-122.902817,0

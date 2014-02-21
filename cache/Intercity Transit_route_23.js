@@ -1,0 +1,1 @@
+{"route_id"=>"23", "route_short_name"=>"620", "route_long_name"=>"Olympia/Tacoma Mall", "route_type"=>"3", "route_agency_id"=>"", "route_desc"=>"", "route_url"=>"", "route_color"=>"", "route_text_color"=>""}
