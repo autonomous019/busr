@@ -1,1 +1,0 @@
-{"route_id"=>"5", "route_short_name"=>"21", "route_long_name"=>"N Bethel/N Central", "route_type"=>"3", "route_agency_id"=>"", "route_desc"=>"", "route_url"=>"", "route_color"=>"", "route_text_color"=>""}

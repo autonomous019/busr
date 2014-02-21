@@ -1,1 +1,0 @@
-{"route_id"=>"10", "route_short_name"=>"47", "route_long_name"=>"Capital Medical Center", "route_type"=>"3", "route_agency_id"=>"", "route_desc"=>"", "route_url"=>"", "route_color"=>"", "route_text_color"=>""}

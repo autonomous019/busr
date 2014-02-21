@@ -1,1 +1,0 @@
-{"route_id"=>"35", "route_short_name"=>"101", "route_long_name"=>"Dash", "route_type"=>"3", "route_agency_id"=>"", "route_desc"=>"", "route_url"=>"", "route_color"=>"", "route_text_color"=>""}

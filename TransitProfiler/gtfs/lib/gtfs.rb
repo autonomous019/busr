@@ -35,10 +35,12 @@ require 'gtfs/local_source'
 
 #writing to redis db is handled in gtfs/model.rb parse_model method
 redis = Redis.new()
+#parse json in js    var json = '{"result":true,"count":1}', obj = JSON && JSON.parse(json) || $.parseJSON(json);
+
 
 agency_uri = Array.new
-agency_uri << 'files/intercity-transit_20140107_0555.zip' #olympia
-#agency_uri << 'files/humboldt-archiver_20140107_0650.zip' #eureka/arcata
+#agency_uri << 'files/intercity-transit_20140107_0555.zip' #olympia
+agency_uri << 'files/humboldt-archiver_20140107_0650.zip' #eureka/arcata
 #agency_uri << 'files/mts_20140208_0134.zip' #san diego
 #agency_uri << 'http://www.intercitytransit.com/googledata/google_transit.zip'
 #agency_uri << 'http://gtfs.s3.amazonaws.com/santa-cruz-metro_20130918_0104.zip'
