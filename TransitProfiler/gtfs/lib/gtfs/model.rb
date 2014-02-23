@@ -91,12 +91,14 @@ module GTFS
         end
       end
       
-      
+      ##### filter_list() #####################
+      # 
+      #
+      #
+      ########################################
       def filter_list(model_name)
         #get list of attributes per model
-    
           modeler = model_name.to_s
-          #puts "Modeler "+modeler
           result = case modeler
              when 'agency_' then return "name url timezone id lang phone fare_url"
              when 'stops_' then return "id name lat lon code desc zone_id url location_type parent_station timezone wheelchair_boarding"
@@ -119,11 +121,14 @@ module GTFS
         
       end
       
-
+      ##### parse_model() #####################
+      # 
+      #
+      #
+      ########################################
       def parse_model(attr_hash, options={})
         
          file_text = attr_hash.to_json
-         #model_data = Hash.new( self.class_variable_get('@@prefix').to_s+"master" )
          $model_data = Array.new
          unprefixed_attr_hash = {}
          $var_hash = Hash.new( self.class_variable_get('@@prefix') )
@@ -131,18 +136,12 @@ module GTFS
          f_title_list = Array.new
          
          attr_hash.each do |key, val|
-           
-           #puts key
            #interrogate for what prefix is used to get list of attributes for given model
              $model_name = self.class_variable_get('@@prefix')
-             #puts $model_name
              filter_list = self.filter_list($model_name)
              $filter_list_arr = filter_list.split(" ")
-            
              #then assign values to right keys, dynamic key interrogation and dynamic value assignment
-             
              $filter_list_arr.each do |f|
-               #puts "f "+f
                #some models have in the txt files headings "agency_id" some have no agency_ it may be trip_id with no agency_trip_id in those cases whe don't want the full model name just the header
                if($model_name.to_s === 'stop_time_' || $model_name.to_s === 'calendar_' || $model_name.to_s === 'calendar_date_'  || $model_name.to_s === 'fare_attribute_' || $model_name.to_s === 'fare_rule_'  || $model_name.to_s === 'frequency_'  || $model_name.to_s === 'transfer_' )
                  #for cases when you just need a generic "trip_id" without a model qualifier in the gtfs text file header
@@ -157,33 +156,20 @@ module GTFS
                if(!f_title_list.include?(f_title))
                    f_title_list.push(f_title)
                end
-               
-               
-               
-                 $model_name_key_arr = Array.new
-                 $model_name_key_arr.push(model_name_key)
+               $model_name_key_arr = Array.new
+               $model_name_key_arr.push(model_name_key)
                  
-                 if(key.to_s === model_name_key.to_s)
+               if(key.to_s === model_name_key.to_s)
                      #push to an key/value pair
                      $var_hash[key.to_s] = val.to_s
                 
-                 end
+               end
                 
              end
-             #puts var_hash
-             
-            
+               
          unprefixed_attr_hash[key.gsub(/^#{prefix}/, '')] = val
         end
-        
-        
-        
-        #model_data.push($var_hash) 
-        #puts model_data.length
-        #model_data.each do |md|
-        #  puts md
-        #end
-        
+
         
         filled_keys_arr = $var_hash.keys
         #puts "hash keys "+filled_keys_arr.to_s
@@ -197,15 +183,11 @@ module GTFS
           $var_hash[x] = ""
         end
         #puts "final hash to redis" + $var_hash.to_s
-        
-        
-         #$model_data.push($var_hash)
-        
-        
-        
         #now send to redis update the agencies string list of all agencies by agency_name and create agency, stop, etc hashes as needed.  
-    #handle writing to redis create a redis handler function different models will need different redis structs
+        #handle writing to redis create a redis handler function different models will need different redis structs
         redis = Redis.new()
+        
+        merge_data(attr_hash, 'atomic', $model_name)
         
         $var_hash.each do |key, val|
           if (key === 'agency_name'  && $model_name.to_s === 'agency_' )
@@ -303,21 +285,67 @@ module GTFS
             #puts redis.hgetall($agency_id+':shapes_'+shape_pt_sequence)
             #cache_writer($agency_id, shape_id+"_"+shape_pt_sequence, $model_name.to_s, file_text)
           end
-          
-          
-         
-       
+           
        end
-       # append to file line by line using cache_writer 
-       
-    
-        
-        #cache_writer($agency_id, shape_pt_sequence, $model_name, $var_hash)
+       #cache_writer($agency_id, shape_pt_sequence, $model_name, $var_hash)
         model = self.new(unprefixed_attr_hash)
       end #end filter method
       
+      
+      
+      ##### merge_data() #####################
+      # 
+      #
+      #
+      ########################################
+      def merge_data(data, context, model_name)
+        #context can be either 'all' or 'atomic' ergo 'all' for all routes, or 'atomic' for an individual route 
+        if (context == 'all')
+          all_collection = Array.new
+        else
+        
+            file_text_arr = Array.new
+            file_text_arr = data
+        
+            file_text_arr_length = file_text_arr.length
+            f_counter = 0
+        
+           
+            merged_data = "var "+$model_name.to_s+ " = ["
+            file_text_arr.each do |key, val|
+                 merged_text = ""
+                 if f_counter == 0
+                    merged_text += "{"
+                 end
+                 merged_text += "\""+key.to_s+"\":\""+val.to_s+"\""
+          
+                 if f_counter == file_text_arr_length-1
+                   merged_text += ""
+                 else
+                   merged_text += ","
+                 end
+         
+                 if f_counter == file_text_arr_length-1
+                   merged_text +=  "},"
+                 end
+                 f_counter = f_counter+1
+                 #puts merged_text
+                 merged_data += merged_text
+             end
+        
+         merged_data += "]"
+         puts merged_data
+         #push merged_data to a super array when needing multiple rows returned, need a mode: one_off, multiple rows
+       end
+        
+      end #ends merge_data()
 
 
+      ##### cache_writer() #####################
+      # 
+      #
+      #
+      ########################################
       def cache_writer(agency_id, id, model, file_text)
         #id here should be some unique id per item row in a given model struct
         
@@ -341,7 +369,11 @@ module GTFS
       end
 
 
-
+      ##### parse_models() #####################
+      # 
+      #
+      #
+      ########################################
       def parse_models(data, options={})
         return [] if data.nil? || data.empty?
 
