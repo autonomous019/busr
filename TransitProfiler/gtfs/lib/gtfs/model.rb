@@ -209,6 +209,7 @@ module GTFS
             #empty the cache file before group batch write to txt file only call once in agency condition
             file_emptier($agency_id)
             rr = rdb_writer($agency_id, 'rdb', '', file_text)
+            
             exit
           end
           
@@ -393,7 +394,24 @@ module GTFS
        
         
       end #ends merge_data()
+      
+      
+      ##### redis_hasher() #####################
+      # 
+      #
+      #
+      ########################################
+      def gen_redis_proto(*cmd)
+          proto = ""
+          proto << "*"+cmd.length.to_s+"\r\n"
+          cmd.each{|arg|
+              proto << "$"+arg.to_s.bytesize.to_s+"\r\n"
+              proto << arg.to_s+"\r\n"
+          }
+          proto
+      end
 
+      
       ##### redis_hasher() #####################
       # 
       #
