@@ -198,115 +198,64 @@ module GTFS
         
         $var_hash.each do |key, val|
           if (key === 'agency_name'  && $model_name.to_s === 'agency_' )
-            
             agency_name = val
-            r_hasher = redis_hasher($var_hash)
-            #file_text = redis.hmset('agency:'+agency_name, 'data', $var_hash   )
-            file_text = "hmset(\"agency:"+agency_name+"\", "+r_hasher+"   ) \n"
-            puts "AGENCY "+redis.hgetall('agency:'+agency_name).to_s
             $agency_id = agency_name
-            #cache_writer($agency_id, 'all', $model_name.to_s, file_text)
-            #empty the cache file before group batch write to txt file only call once in agency condition
-            file_emptier($agency_id)
-            rr = rdb_writer($agency_id, 'rdb', '', file_text)
-            
-            exit
+            agency_name = underscore(agency_name)
+            redisize("HMSET","agency:#{agency_name}",$var_hash)
           end
           
           if (key === 'route_id'   && $model_name.to_s === 'route_')
             route_id = val
-            #file_text = redis.hmset($agency_id+':route_'+route_id, 'data', $var_hash   )
-            file_text = "hmset("+$agency_id+"':route_'"+route_id+", 'data', "+$var_hash.to_s+"   ) \n"
-            #puts "ROUTE "+redis.hgetall($agency_id+':route_'+route_id).to_s
-            #puts $var_hash
-            #cache_writer($agency_id, 'all', $model_name.to_s, file_text)
-            #puts $model_data
-            rr = rdb_writer($agency_id, 'rdb', '', file_text)
+            redisize("HMSET",$agency_id+":route_"+route_id, $var_hash)
           end
           
           
           if (key === 'stop_id'   && $model_name.to_s === 'stop_')
             stop_id = val
-            #file_text = redis.hmset($agency_id+':stop_'+stop_id, 'data', $var_hash   )
-            file_text = "hmset("+$agency_id+"':stop_'"+stop_id+", 'data', "+$var_hash.to_s+"   ) \n"
-             #puts "STOP "+redis.hgetall($agency_id+':stop_'+stop_id).to_s
-            #cache_writer($agency_id, stop_id, $model_name.to_s, file_text)
-            rr = rdb_writer($agency_id, 'rdb', '', file_text)
+            redisize("HMSET",$agency_id+":stop_"+stop_id, $var_hash)
           end
           
           if (key === 'trip_id'   && $model_name.to_s === 'trip_')
             trip_id = val
-            #file_text = redis.hmset($agency_id+':trip_'+trip_id, 'data', $var_hash   )
-            file_text = "hmset("+$agency_id+"':trip_'"+trip_id+", 'data', "+$var_hash.to_s+"   ) \n"
-             #puts "TRIP "+redis.hgetall($agency_id+':trip_'+trip_id).to_s
-            #cache_writer($agency_id, 'trip_id', $model_name.to_s, file_text)
-            rr = rdb_writer($agency_id, 'rdb', '', file_text)
+            redisize("HMSET",$agency_id+":trip_"+trip_id, $var_hash)
           end
           
 
           if (key === 'stop_time_trip_id' && $model_name.to_s === 'stop_time_')
             stop_time_trip_id = val
-            #file_text = redis.hmset($agency_id+':stop_times_'+stop_time_trip_id, 'data', $var_hash   )
-            file_text = "hmset("+$agency_id+"':stop_times_'"+stop_time_trip_id+", 'data', "+$var_hash.to_s+"   ) \n"
-            #puts redis.hgetall($agency_id+':stop_times_'+stop_time_trip_id)
-            #cache_writer($agency_id, stop_time_trip_id, $model_name.to_s, file_text)
-            rr = rdb_writer($agency_id, 'rdb', '', file_text)
+            redisize("HMSET",$agency_id+":stop_times_"+stop_time_trip_id, $var_hash)
           end
           
 
           if (key === 'service_id' && $model_name.to_s === 'calendar_')
             service_id = val
-            #file_text = redis.hmset($agency_id+':calendar_'+service_id, 'data', $var_hash   )
-            file_text = "hmset("+$agency_id+"':calendar_'"+service_id+", 'data', "+$var_hash.to_s+"   ) \n"
-            #puts redis.hgetall($agency_id+':calendar_'+service_id)
-            rr = rdb_writer($agency_id, 'rdb', '', file_text)
-            #cache_writer($agency_id, service_id, $model_name.to_s, file_text)
+            redisize("HMSET",$agency_id+":calendar_"+service_id, $var_hash)
            
           end
           
           if (key === 'service_id' && $model_name.to_s === 'calendar_date_')
             service_id = val
-            #file_text = redis.hmset($agency_id+':calendar_date_'+service_id, 'data', $var_hash   )
-            file_text = "hmset("+$agency_id+"':calendar_date_'"+service_id+", 'data', "+$var_hash.to_s+"   ) \n"
-            #puts redis.hgetall($agency_id+':calendar_date_'+service_id)
-            rr = rdb_writer($agency_id, 'rdb', '', file_text)
-            #cache_writer($agency_id, 'all', $model_name.to_s, file_text)
+            redisize("HMSET",$agency_id+":calendar_date_"+service_id, $var_hash)
           end
           
           if (key === 'fare_id' && $model_name.to_s === 'fare_attribute_')
             fare_id = val
-            #file_text = redis.hmset($agency_id+':fare_attribute_'+fare_id, 'data', $var_hash   )
-            file_text = "hmset("+$agency_id+"':fare_attribute_'"+fare_id+", 'data', "+$var_hash.to_s+"   ) \n"
-            #puts redis.hgetall($agency_id+':fare_attribute_'+fare_id)
-            rr = rdb_writer($agency_id, 'rdb', '', file_text)
-            #cache_writer($agency_id, fare_id, $model_name.to_s, file_text)
+            redisize("HMSET",$agency_id+":fare_attribute_"+fare_id, $var_hash)
           end
           
           if (key === 'fare_id' && $model_name.to_s === 'fare_rule_')
             fare_id = val
-            #file_text = redis.hmset($agency_id+':fare_rule_'+fare_id, 'data', $var_hash   )
-            file_text = "hmset("+$agency_id+"':fare_rule_'"+fare_id+", 'data', "+$var_hash.to_s+"   ) \n"
-            #puts redis.hgetall($agency_id+':fare_rule_'+fare_id)
-            rr = rdb_writer($agency_id, 'rdb', '', file_text)
-            #cache_writer($agency_id, fare_id, $model_name.to_s, file_text)
+            redisize("HMSET",$agency_id+":fare_rule_"+fare_id, $var_hash)
           end
           
           if (key === 'trip_id' && $model_name.to_s === 'frequency_')
             trip_id = val
-            #file_text = redis.hmset($agency_id+':frequency_'+trip_id, 'data', $var_hash   )
-            file_text = "hmset("+$agency_id+"':frequency_'"+trip_id+", 'data', "+$var_hash.to_s+"   ) \n"
-            #puts redis.hgetall($agency_id+':frequency_'+trip_id)
-            #cache_writer($agency_id, trip_id, $model_name.to_s, file_text)
-            rr = rdb_writer($agency_id, 'rdb', '', file_text)
+            redisize("HMSET",$agency_id+":frequency_"+trip_id, $var_hash)
           end
           
           if (key === 'from_stop_id' && $model_name.to_s === 'transfer_')
             from_stop_id = val
-            #file_text = redis.hmset($agency_id+':transfer_'+from_stop_id, 'data', $var_hash   )
-            file_text = "hmset("+$agency_id+"':transfer_'"+from_stop_id+", 'data', "+$var_hash.to_s+"   ) \n"
-            #puts redis.hgetall($agency_id+':transfer_'+from_stop_id)
-            #cache_writer($agency_id, from_stop_id, $model_name.to_s, file_text)
-            rr = rdb_writer($agency_id, 'rdb', '', file_text)
+            redisize("HMSET",$agency_id+":transfer_"+from_stop_id, $var_hash)
           end
           
           if (key === 'shape_id'  && $model_name.to_s === 'shape_')
@@ -315,11 +264,7 @@ module GTFS
           
           if (key === 'shape_pt_sequence'  && $model_name.to_s === 'shape_')
             shape_pt_sequence = val
-            #file_text = redis.hmset($agency_id+':shapes_'+$shape_id.to_s+'_'+shape_pt_sequence.to_s, 'data', $var_hash   )
-            file_text = "hmset("+$agency_id+"':shapes_'"+$shape_id.to_s+"'_'"+shape_pt_sequence.to_s+", 'data', "+$var_hash.to_s+")"
-            #puts redis.hgetall($agency_id+':shapes_'+shape_pt_sequence)
-            #cache_writer($agency_id, shape_id+"_"+shape_pt_sequence, $model_name.to_s, file_text)
-            rr = rdb_writer($agency_id, 'rdb', '', file_text)
+            redisize("HMSET",$agency_id+":shapes_"+$shape_id.to_s+"_"+shape_pt_sequence.to_s, $var_hash)
           end
            
        end
@@ -330,109 +275,64 @@ module GTFS
       
       
       
-      ##### merge_data() #####################
-      # merges data to send to cache_writer which writes a js file of data for node.js to handle
-      # context can be either 'all' or 'atomic' ergo 'all' for all routes, or 'atomic' for an individual route 
-      #
-      ########################################
-      def merge_data(data, context, model_name)
-        
-        context = 'all'
-        
-            all_collection = Array.new
-        
-        
-            file_text_arr = Array.new
-            file_text_arr = data
-        
-            file_text_arr_length = file_text_arr.length
-            f_counter = 0
-        
-            merged_data = "var "+$model_name.to_s+ " = ["
-            
-            file_text_arr.each do |key, val|
-                 merged_text = ""
-                 if f_counter == 0
-                    merged_text += "{"
-                 end
-                 
-                 merged_text += "\""+key.to_s+"\":\""+val.to_s+"\""
-                 if f_counter == file_text_arr_length-1
-                   merged_text += ""
-                 else
-                   merged_text += ","
-                 end
-         
-                 if f_counter == file_text_arr_length-1
-                   merged_text +=  "},"
-                 end
-                 f_counter = f_counter+1
-                 #puts merged_text
-                 merged_data += merged_text
-                 
-                 
-                 if(context == 'all')
-                   all_collection.push(merged_text)
-                 end
-                 
-             end
-             merged_data += "]"
-            
-             if(context == 'all')
-               merged_data = "var "+$model_name.to_s+ " = ["
-               merged_data += all_collection.to_s
-               merged_data += "]"
-             end
-             
-             #puts merged_data
-             
-             return merged_data
-         
-       
-         
-         #push merged_data to a super array when needing multiple rows returned, need a mode: one_off, multiple rows
-       
-        
-      end #ends merge_data()
-      
-      
+     
       ##### redis_hasher() #####################
-      # 
-      #
-      #
-      ########################################
-      def gen_redis_proto(*cmd)
-          proto = ""
-          proto << "*"+cmd.length.to_s+"\r\n"
-          cmd.each{|arg|
-              proto << "$"+arg.to_s.bytesize.to_s+"\r\n"
-              proto << arg.to_s+"\r\n"
-          }
-          proto
-      end
-
-      
-      ##### redis_hasher() #####################
-      # 
+      # r_hasher = redis_hasher($var_hash)
       #
       #
       ########################################
       def redis_hasher(rhash)        
-        puts rhash.length
-        counter = 1;
+        counter = 1
+        
         r_str = ""
         rhash.each do |key,val|
-          if counter == rhash.length 
-            my_redis_setter = " \""+key+"\", \""+val+"\" "
-          else 
-            my_redis_setter = " \""+key+"\", \""+val+"\", "
-          end
-          counter = counter + 1
+          val.gsub! ' ', '_'
+          val.gsub! '\\', '-'
+          val.gsub! '(', ''
+          val.gsub! ')', ''
+          val.gsub! 'http://', ''
+          val.gsub! '/', ''
+        if (counter < rhash.length)  
+          my_redis_setter = "'"+key+"' , '"+val+"', "
+        else
+          my_redis_setter = "'"+key+"' , '"+val+"' "
+        end
+        
           r_str += my_redis_setter
+          counter += 1
             
         end
         return  r_str
       end
+
+      #redisize("HMSET","#{agency_name}","#{r_hasher}")
+      ##### redisize() #####################
+      # 
+      #
+      #
+      ########################################
+      def redisize(mode, name, data)
+        redis = Redis.new(:host => "localhost", :port => 6379)  
+        
+        data.each do |key,val|
+          redis.hset(name, key, val)
+        end
+        #
+        #$redis.hset(
+        #      "mySessionStore",
+        #      cookies["_validation_token_key"],
+        #      stored_session,
+        #     )
+          
+          #redis.hmset("test:1", "test", "test data", "field2", "field2 data")
+          #redis.hmset("agency:blah", "agency_id" , "1", "agency_name" , "Redwood_Transit_System", "agency_url" , "www.redwoodtransit.org", "agency_timezone" , "AmericaLos_Angeles", "agency_phone" , "707_443-0826", "agency_fare_url" , "", "agency_lang" , "en" )
+          
+          if( mode === "HMSET" )
+             #redis.hmset(name.to_s, data.to_s)
+          end
+           #puts "redis.hmset("+name.to_s+", "+data.to_s+")"
+      end
+      
 
       ##### file_emptier() #####################
       # 
@@ -447,8 +347,22 @@ module GTFS
         end
         
         
+      end
+      
+      
+      ##### underscore() #####################
+      # 
+      #
+      #
+      ########################################
+      def underscore(name)        
+        name.gsub! ' ', '_'
+        return name
+        
+      
         
       end
+      
       ##### rdb_writer() #####################
       # 
       #
@@ -472,6 +386,37 @@ module GTFS
         
       end
 
+      ##### gen_redis_proto() #####################
+      #
+      #  592  redis-cli FLUSHDB
+      #  
+      #  598  cat ../../../cache/rds_mass_inserts_test.txt | redis-cli --pipe
+      #  599  redis-cli KEYS '*'
+      #"*3\r\n$3\r\nSET\r\n$3\r\nkey\r\n$5\r\nvalue\r\n"
+      #
+      ########################################
+      def gen_redis_proto(*cmd)
+              #HMSET agency:Redwood_Transit_System  agency_id  "1"   agency_name  "Redwood Transit System"   agency_url  "http://www.redwoodtransit.org/" agency_timezone  "America/Los_Angeles"   agency_phone  "(707) 443-0826" agency_fare_url  ""   agency_lang  "en" 
+          proto = ""
+          proto << "*"+cmd.length.to_s+"\r\n"
+          cmd.each{|arg|
+              proto << "$"+arg.to_s.bytesize.to_s+"\r\n"
+              proto << arg.to_s+"\r\n"
+          }
+
+          
+          #begin
+          #  file = File.open("../../../cache/rds_mass_inserts_test.txt", "a+")
+          #  file.write(proto) 
+          #rescue IOError => e
+            #some error occur, dir not writable etc.
+            #ensure
+            #file.close unless file == nil
+            #end
+          proto
+      end
+      
+      
       ##### cache_writer() #####################
       # 
       #

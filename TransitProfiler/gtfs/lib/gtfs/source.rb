@@ -36,12 +36,14 @@ module GTFS
     def extract_to_cache(source_path)
       Zip::ZipFile.open(source_path) do |zip|
         zip.entries.each do |entry|
+          
           zip.extract(entry.name, File.join(@tmp_dir, '/', entry.name))
         end
       end
     end
 
     def load_archive(source)
+      
       raise 'Cannot directly instantiate base GTFS::Source'
     end
 
@@ -56,6 +58,7 @@ module GTFS
     def entries
       
       Dir.entries(@tmp_dir)
+      
     end
 
     def raise_if_missing_source(filename)
@@ -66,6 +69,12 @@ module GTFS
     ENTITIES.each do |entity|
       define_method entity.name.to_sym do
         parse_file entity.filename do |f|
+          
+          #puts entity.name
+          #puts entity.filename
+          
+          
+          
           entity.send("parse_#{entity.name}".to_sym, f.read, options)
         end
       end
@@ -80,8 +89,13 @@ module GTFS
     end
 
     def parse_file(filename)
+      #sanitize any non-standardized agency added corrupte data here like double quotes
+      File.write(f = @tmp_dir+'/'+filename, File.read(f).gsub('"', ''))
       raise_if_missing_source filename
+     
+      
       open File.join(@tmp_dir, '/', filename), 'r:bom|utf-8' do |f|
+      
         files[filename] ||= yield f
       end
     end
