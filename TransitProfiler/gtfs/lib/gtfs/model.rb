@@ -305,27 +305,20 @@ module GTFS
         return  r_str
       end
 
-      #redisize("HMSET","#{agency_name}","#{r_hasher}")
+      
       ##### redisize() #####################
-      # 
+      # redisize("HMSET","#{agency_name}","#{r_hasher}")
       #
       #
       ########################################
       def redisize(mode, name, data)
         redis = Redis.new(:host => "localhost", :port => 6379)  
         
+        #HSET 
         data.each do |key,val|
           redis.hset(name, key, val)
         end
-        #
-        #$redis.hset(
-        #      "mySessionStore",
-        #      cookies["_validation_token_key"],
-        #      stored_session,
-        #     )
-          
-          #redis.hmset("test:1", "test", "test data", "field2", "field2 data")
-          #redis.hmset("agency:blah", "agency_id" , "1", "agency_name" , "Redwood_Transit_System", "agency_url" , "www.redwoodtransit.org", "agency_timezone" , "AmericaLos_Angeles", "agency_phone" , "707_443-0826", "agency_fare_url" , "", "agency_lang" , "en" )
+ 
           
           if( mode === "HMSET" )
              #redis.hmset(name.to_s, data.to_s)

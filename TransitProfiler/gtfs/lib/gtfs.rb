@@ -59,7 +59,7 @@ agency_uri.each do |au|
   source.calendar_dates     
   #source.fare_attributes   
   #source.fare_rules         
-  #source.frequencies  #debug only headers in txt file no data need to confirm it works     
+  #source.frequencies  
   #source.transfers 
   source.shapes
   
