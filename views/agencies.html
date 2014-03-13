@@ -1,19 +1,19 @@
 
 
 <h3>Agencies</h3>
+ {{! This comment will not be in the output }}
+ 
+ Len: {{agencies.length}}
+ <p>&nbsp;</p>
+
+{{#each agencies}}
+  <a href="/agency/{{agency_name}}"> {{agency_name}} </a><br/>
+{{/each}}
+
+
 {{#with agencies}}
         <p>{{agency_id}}, {{agency_url}}</p>
     {{/with}}
 
 
-<!-- 
 
-{{#each agencies}}
-
-<a href="/agency/{{agency_id}}"> {{agency_id}} </a><br/>
-
-   {{@key}} {{this}}  
- 
-{{/each}}
-
--->

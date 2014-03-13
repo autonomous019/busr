@@ -17,7 +17,7 @@ var agenciesEngine = require('./agencies');
 var busrEngine = require('./busr');
 var posterEngine = require('./poster');
 
-//var stopsEngine = require('./stops')
+
 
 app.set('view engine', 'html');
 app.engine('html', hbs.__express);
@@ -100,7 +100,11 @@ app.get('/about', function(req, res) {
 //AGENCIES NAVIGATOR
 app.get('/agencies', function(req, res) {
 	//res.render('agencies', {title:"Agencies"});
-	res.render('agencies',{title:"Transit Agencies", agencies:agenciesEngine.getAgencies()});
+	agents = agenciesEngine.getAgencies();
+	//console.log("AGENTS ");
+	//console.log(agents);
+	res.render('agencies',{title:"Transit Agencies", agencies:agenciesEngine.getAgenciesStatic()});
+	//res.render('agencies',{title:"Transit Agencies", agencies:agenciesEngine.getAgencies()});
 });
 
 
