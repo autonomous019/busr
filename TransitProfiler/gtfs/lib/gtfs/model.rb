@@ -202,11 +202,14 @@ module GTFS
             $agency_id = agency_name
             agency_name = underscore(agency_name)
             redisize("HMSET","agency:#{agency_name}",$var_hash)
+            cache_writer('agencies', '', $model, $var_hash)
+            
           end
           
           if (key === 'route_id'   && $model_name.to_s === 'route_')
             route_id = val
             redisize("HMSET",$agency_id+":route_"+route_id, $var_hash)
+            
           end
           
           
@@ -281,27 +284,32 @@ module GTFS
       #
       #
       ########################################
-      def redis_hasher(rhash)        
+      def hasher(rhash) 
+        
+        
+               
         counter = 1
         
-        r_str = ""
+        r_str = "{ \n"
         rhash.each do |key,val|
-          val.gsub! ' ', '_'
-          val.gsub! '\\', '-'
-          val.gsub! '(', ''
-          val.gsub! ')', ''
-          val.gsub! 'http://', ''
-          val.gsub! '/', ''
+          #val.gsub! ' ', '_'
+          #val.gsub! '\\', '-'
+          #val.gsub! '(', ''
+          #val.gsub! ')', ''
+          #val.gsub! 'http://', ''
+          #val.gsub! '/', ''
         if (counter < rhash.length)  
-          my_redis_setter = "'"+key+"' , '"+val+"', "
+          my_setter = "'"+key+"': , '"+val+"', \n "
         else
-          my_redis_setter = "'"+key+"' , '"+val+"' "
+          my_setter = "'"+key+"'"" , '"+val+"' \n"
+          my_setter += "\n }, \n"
         end
         
-          r_str += my_redis_setter
+          r_str += my_setter
           counter += 1
             
         end
+       
         return  r_str
       end
 
@@ -417,10 +425,12 @@ module GTFS
       ########################################
       def cache_writer(agency_id, id, model, file_text)
         #id here should be some unique id per item row in a given model struct
-        
+        file_text = hasher(file_text)
         agency_id.gsub! ' ', '_'
         id.gsub! ' ', '_'
-        
+        model = model.to_s
+        id = id.to_s
+        #r_str = "var agencies = [{ \n"
         if (File.exist?("../../../cache/"+agency_id+"_"+model+""+id+".js"))
              empty = File.open("../../../cache/"+agency_id+"_"+model+""+id+".js", "w") {|file| file.truncate(0) }
         end
