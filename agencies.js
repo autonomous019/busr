@@ -7,9 +7,11 @@ client.on("error", function (err) {
 
 var my_arr = new Array();
 var my_detail_arr = new Array();
+var my_routes_arr = new Array();
 var agencies = [ ];
 var agent_info = [ ];
 var agent = [ ];
+var routes = [ ];
 
 exports.getAgencies = function(req, res) {
     if(agencies.length >= 1){
@@ -55,6 +57,7 @@ exports.getAgencies = function(req, res) {
  	return agencies;
  }
 
+
  exports.getAgency = function(agency_name) {
      if(agent.length >= 1){
      	agent = [];
@@ -80,5 +83,51 @@ exports.getAgencies = function(req, res) {
  exports.getAgencyStatic = function() {
  	return agent;
  }
+
+
+
+ //"Intercity_Transit:route_10" Intercity_Transit_routes
+ exports.getAgencyRoutes = function(agency_name) {
+     if(routes.length >= 1){
+     	routes = [];
+     }
+     
+     client.smembers(agency_name+'_routes', function(err, keys) {
+
+     if (err) return console.log(err);
+  
+     for(var i = 0, len = keys.length; i < len; i++) {
+ 		var k = 0;
+		
+ 		keys[i] = agency_name+':route_'+keys[i];
+		
+ 		client.hgetall(keys[i], function(err, results) {
+			
+ 		   if (err) {
+		          
+ 		  		my_route_arr += [{"route_id":"404: error, no data"}];
+
+ 		      } else {
+				  console.log(results);
+ 				 my_route_arr = results;
+ 				 routes.push(my_route_arr);
+				 
+ 				 if(k == keys.length-1){
+                    
+ 					 return routes;
+ 				 } 
+
+ 		      }
+ 			  k++;
+ 		});
+     }
+    });
+
+ };
+ 
+ exports.getAgencyRoutesStatic = function() {
+ 	return routes;
+ }
+
 
  

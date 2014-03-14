@@ -200,57 +200,58 @@ module GTFS
           
           if (key === 'route_id'   && $model_name.to_s === 'route_')
             route_id = val
-            redisize("HMSET",$agency_id+":route_"+route_id, $var_hash)
+            redisize("SADD", $agency_id+"_routes", route_id)
+            redisize("HSET",$agency_id+":route_"+route_id, $var_hash)
             
           end
           
           
           if (key === 'stop_id'   && $model_name.to_s === 'stop_')
             stop_id = val
-            redisize("HMSET",$agency_id+":stop_"+stop_id, $var_hash)
+            redisize("HSET",$agency_id+":stop_"+stop_id, $var_hash)
           end
           
           if (key === 'trip_id'   && $model_name.to_s === 'trip_')
             trip_id = val
-            redisize("HMSET",$agency_id+":trip_"+trip_id, $var_hash)
+            redisize("HSET",$agency_id+":trip_"+trip_id, $var_hash)
           end
           
 
           if (key === 'stop_time_trip_id' && $model_name.to_s === 'stop_time_')
             stop_time_trip_id = val
-            redisize("HMSET",$agency_id+":stop_times_"+stop_time_trip_id, $var_hash)
+            redisize("HSET",$agency_id+":stop_times_"+stop_time_trip_id, $var_hash)
           end
           
 
           if (key === 'service_id' && $model_name.to_s === 'calendar_')
             service_id = val
-            redisize("HMSET",$agency_id+":calendar_"+service_id, $var_hash)
+            redisize("HSET",$agency_id+":calendar_"+service_id, $var_hash)
            
           end
           
           if (key === 'service_id' && $model_name.to_s === 'calendar_date_')
             service_id = val
-            redisize("HMSET",$agency_id+":calendar_date_"+service_id, $var_hash)
+            redisize("HSET",$agency_id+":calendar_date_"+service_id, $var_hash)
           end
           
           if (key === 'fare_id' && $model_name.to_s === 'fare_attribute_')
             fare_id = val
-            redisize("HMSET",$agency_id+":fare_attribute_"+fare_id, $var_hash)
+            redisize("HSET",$agency_id+":fare_attribute_"+fare_id, $var_hash)
           end
           
           if (key === 'fare_id' && $model_name.to_s === 'fare_rule_')
             fare_id = val
-            redisize("HMSET",$agency_id+":fare_rule_"+fare_id, $var_hash)
+            redisize("HSET",$agency_id+":fare_rule_"+fare_id, $var_hash)
           end
           
           if (key === 'trip_id' && $model_name.to_s === 'frequency_')
             trip_id = val
-            redisize("HMSET",$agency_id+":frequency_"+trip_id, $var_hash)
+            redisize("HSET",$agency_id+":frequency_"+trip_id, $var_hash)
           end
           
           if (key === 'from_stop_id' && $model_name.to_s === 'transfer_')
             from_stop_id = val
-            redisize("HMSET",$agency_id+":transfer_"+from_stop_id, $var_hash)
+            redisize("HSET",$agency_id+":transfer_"+from_stop_id, $var_hash)
           end
           
           if (key === 'shape_id'  && $model_name.to_s === 'shape_')
@@ -259,7 +260,7 @@ module GTFS
           
           if (key === 'shape_pt_sequence'  && $model_name.to_s === 'shape_')
             shape_pt_sequence = val
-            redisize("HMSET",$agency_id+":shapes_"+$shape_id.to_s+"_"+shape_pt_sequence.to_s, $var_hash)
+            redisize("HSET",$agency_id+":shapes_"+$shape_id.to_s+"_"+shape_pt_sequence.to_s, $var_hash)
           end
            
        end
