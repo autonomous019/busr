@@ -107,9 +107,9 @@ app.get('/agencies', function(req, res) {
 
 app.get('/agency/:agency_name', function(req, res) {
 	var agency_name = req.params.agency_name;
-	agents = agenciesEngine.getAgencies(); //generate the list of agencies to be called by res.render
-	console.log(agenciesEngine.getAgenciesStatic());
-	res.render('agency',{title:"Agency:"+agency_name, agency_name:agency_name, agent_info:agenciesEngine.getAgency(agency_name)});
+	agents = agenciesEngine.getAgency(agency_name);
+	
+	res.render('agency',{title:"Agency:"+agency_name, agency_name:agency_name, agent:agenciesEngine.getAgencyStatic(agency_name)});
 });
 
 

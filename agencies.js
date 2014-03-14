@@ -6,8 +6,10 @@ client.on("error", function (err) {
 });
 
 var my_arr = new Array();
+var my_detail_arr = new Array();
 var agencies = [ ];
 var agent_info = [ ];
+var agent = [ ];
 
 exports.getAgencies = function(req, res) {
     if(agencies.length >= 1){
@@ -54,36 +56,29 @@ exports.getAgencies = function(req, res) {
  }
 
  exports.getAgency = function(agency_name) {
-	 
-	 
-	 console.log("Get Agency()"+agency_name);
-	 console.log("LEN "+agencies.length);
-	 
-	client.hgetall(agency_name, function(err, results) {
+     if(agent.length >= 1){
+     	agent = [];
+     }
+	 client.hgetall("agency:"+agency_name, function(err, results) {
 		
 	   if (err) {
 	          
-	  		my_arr += [{"agency_id":"404: error, no data", "agency_url":"sorry, temporary error"}];
-
+	  		agent = [{"agency_name":"404: error, no data", "agency_id":"sorry, temporary error"}];
+            return results;
 	      } else {
 			  
-			 my_arr = results;
-			 agent_info.push(my_arr);
-			 
-			 if(k == keys.length-1){
-                 
-				 return agent_info;
-			 } 
+			 my_detail_arr = results;
+			 agent.push(my_detail_arr);
+			 console.log(agent);
+			 return agent;
 
 	      }
 		  k++;
 	});
  }
-});
-	 
-	 
-	 
- 	for(var i=0; i<agencies.length; i++) {
- 		if(agencies[i].agency_name == agency_name) return agencies[i];
- 	}
+ 
+ exports.getAgencyStatic = function() {
+ 	return agent;
  }
+
+ 
