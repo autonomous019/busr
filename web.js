@@ -99,10 +99,17 @@ app.get('/about', function(req, res) {
 
 //AGENCIES NAVIGATOR
 app.get('/agencies', function(req, res) {
-	//check if array count is greater > 0 then don't regenerate agents list
+	//check if array count is greater > 0 then don't regenerate agents list in agencies.js
 	agents = agenciesEngine.getAgencies(); //generate the list of agencies to be called by res.render
 	res.render('agencies',{title:"Transit Agencies", agencies:agenciesEngine.getAgenciesStatic()});
 	
+});
+
+app.get('/agency/:agency_name', function(req, res) {
+	var agency_name = req.params.agency_name;
+	agents = agenciesEngine.getAgencies(); //generate the list of agencies to be called by res.render
+	console.log(agenciesEngine.getAgenciesStatic());
+	res.render('agency',{title:"Agency:"+agency_name, agency_name:agency_name, agent_info:agenciesEngine.getAgency(agency_name)});
 });
 
 
