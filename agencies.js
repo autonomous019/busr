@@ -12,13 +12,14 @@ exports.getAgencies = function(req, res) {
     if(agencies.length >= 1){
     	agencies = [];
     }
-	//how to return keys by wildcard 
-    client.keys('*', function(err, keys) {
+	//redis-cli SMEMBERS 'agencies'
+    client.smembers('agencies', function(err, keys) {
 
     if (err) return console.log(err);
   
     for(var i = 0, len = keys.length; i < len; i++) {
 		var k = 0;
+		keys[i] = "agency:"+keys[i];
 		client.hgetall(keys[i], function(err, results) {
 			
 		   if (err) {
@@ -26,6 +27,7 @@ exports.getAgencies = function(req, res) {
 		  		my_arr += [{"agency_id":"404: error, no data", "agency_url":"sorry, temporary error"}];
 
 		      } else {
+				  console.log(results);
 				 my_arr = results;
 				 agencies.push(my_arr);
 				 

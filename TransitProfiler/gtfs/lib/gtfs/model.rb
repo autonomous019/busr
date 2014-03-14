@@ -178,20 +178,11 @@ module GTFS
 
         
         filled_keys_arr = $var_hash.keys
-        #puts "hash keys "+filled_keys_arr.to_s
-        #puts "f_title list "+f_title_list.to_s
-        
         findings = f_title_list - filled_keys_arr 
-        #puts "findings "+findings.to_s
-        
-        #take array from findings and add to $var_hash with value = nil
         findings.each do |x|
           $var_hash[x] = ""
         end
-        #puts "final hash to redis" + $var_hash.to_s
-        
-        #handle writing to redis create a redis handler function different models will need different redis structs
-        #redis = Redis.new()
+
         redis = Redis.new(:host => "localhost", :port => 6379)
         
         #TODO: need to empty the redis hash for each row if it exists before updating it.  
@@ -201,7 +192,8 @@ module GTFS
             agency_name = val
             $agency_id = agency_name
             agency_name = underscore(agency_name)
-            redisize("HMSET","agency:#{agency_name}",$var_hash)
+            redisize("HSET","agency:#{agency_name}",$var_hash)
+            redisize("SADD", "agencies", agency_name)
             cache_writer('agencies', '', $model, $var_hash)
             
           end
@@ -322,15 +314,24 @@ module GTFS
       def redisize(mode, name, data)
         redis = Redis.new(:host => "localhost", :port => 6379)  
         
-        #HSET 
-        data.each do |key,val|
-          redis.hset(name, key, val)
-        end
- 
+        
           
-          if( mode === "HMSET" )
-             #redis.hmset(name.to_s, data.to_s)
+          if( mode === "HSET" )
+            #HSET 
+            data.each do |key,val|
+              redis.hset(name, key, val)
+            end
+ 
           end
+          
+          if( mode === "SADD" )
+            #HSET 
+             #$redis.sadd(self.redis_key(:following), user.id)
+              redis.sadd(name, data)
+          end
+          
+          
+          
            #puts "redis.hmset("+name.to_s+", "+data.to_s+")"
       end
       
