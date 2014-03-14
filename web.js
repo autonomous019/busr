@@ -99,12 +99,10 @@ app.get('/about', function(req, res) {
 
 //AGENCIES NAVIGATOR
 app.get('/agencies', function(req, res) {
-	//res.render('agencies', {title:"Agencies"});
-	agents = agenciesEngine.getAgencies();
-	//console.log("AGENTS ");
-	//console.log(agents);
+	//check if array count is greater > 0 then don't regenerate agents list
+	agents = agenciesEngine.getAgencies(); //generate the list of agencies to be called by res.render
 	res.render('agencies',{title:"Transit Agencies", agencies:agenciesEngine.getAgenciesStatic()});
-	//res.render('agencies',{title:"Transit Agencies", agencies:agenciesEngine.getAgencies()});
+	
 });
 
 
