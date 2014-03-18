@@ -149,10 +149,22 @@ module GTFS
              #then assign values to right keys, dynamic key interrogation and dynamic value assignment
              $filter_list_arr.each do |f|
                #some models have in the txt files headings "agency_id" some have no agency_ it may be trip_id with no agency_trip_id in those cases whe don't want the full model name just the header
-               if($model_name.to_s === 'stop_time_' || $model_name.to_s === 'calendar_' || $model_name.to_s === 'calendar_date_'  || $model_name.to_s === 'fare_attribute_' || $model_name.to_s === 'fare_rule_'  || $model_name.to_s === 'frequency_'  || $model_name.to_s === 'transfer_' )
+               if($model_name.to_s === 'stop_time_' || $model_name.to_s === 'trip_' || $model_name.to_s === 'calendar_' || $model_name.to_s === 'calendar_date_'  || $model_name.to_s === 'fare_attribute_' || $model_name.to_s === 'fare_rule_'  || $model_name.to_s === 'frequency_'  || $model_name.to_s === 'transfer_' )
                  #for cases when you just need a generic "trip_id" without a model qualifier in the gtfs text file header
                    f_title = f.to_s
                    model_name_key = "#{f}"
+                   #trips have a mixed title structure with some with trip_id, trip_headsign and some generic route_id
+                   if($model_name.to_s === 'trip_' && f_title === 'id')
+                     model_name_key = "trip_#{f}"
+                     f_title = 'trip_id';
+                   end
+                   if($model_name.to_s === 'trip_' && f_title === 'headsign')
+                     model_name_key = "trip_#{f}"
+                     f_title = 'trip_headsign'
+                   end
+                   
+                   #puts model_name_key
+                   
                else
                  #for cases like "agency_id" for agency_ model where headers are like "agency_id, agency_name, etc"
                    f_title = $model_name.to_s+f.to_s
@@ -170,6 +182,8 @@ module GTFS
                      $var_hash[key.to_s] = val.to_s
                 
                end
+               
+               
                 
              end
                
@@ -208,49 +222,74 @@ module GTFS
           
           if (key === 'stop_id'   && $model_name.to_s === 'stop_')
             stop_id = val
+            redisize("SADD", $agency_id+"_stops", stop_id)
             redisize("HSET",$agency_id+":stop_"+stop_id, $var_hash)
           end
           
           if (key === 'trip_id'   && $model_name.to_s === 'trip_')
             trip_id = val
+            #trip_id,route_id,service_id,trip_headsign,block_id,shape_id
+            
+            redisize("SADD", $agency_id+"_trips", trip_id)
             redisize("HSET",$agency_id+":trip_"+trip_id, $var_hash)
           end
           
+     
+          if (key === 'trip_id' && $model_name.to_s === 'stop_time_')
+            stop_id = $var_hash['stop_id']
+            trip_id = val
+            redisize("SADD", $agency_id+"_stop_times", trip_id+"_"+stop_id)
+            redisize("HSET",$agency_id+":stop_times_"+trip_id+"_"+stop_id, $var_hash)
+            
+            #need a set of:
+            #routes connect to trips via route_id
+            #stop_times connect to trips via trip_id
+            #stops connect to stop_times via stop_id
 
-          if (key === 'stop_time_trip_id' && $model_name.to_s === 'stop_time_')
-            stop_time_trip_id = val
-            redisize("HSET",$agency_id+":stop_times_"+stop_time_trip_id, $var_hash)
+            #join routes to trips where routes.route_id = trips.route_id
+            #join stop_times to trips where stop_times.trip_id = trips.trip_id
+            #join stops to stop_times where stops.stop_id = stop_times.stop_id
+            
+            #calendars join trips via service_id
+            #calendar_dates join calendar via service_id
+            
           end
           
 
           if (key === 'service_id' && $model_name.to_s === 'calendar_')
             service_id = val
+            redisize("SADD", $agency_id+"_calendar", service_id)
             redisize("HSET",$agency_id+":calendar_"+service_id, $var_hash)
            
           end
           
-          if (key === 'service_id' && $model_name.to_s === 'calendar_date_')
-            service_id = val
-            redisize("HSET",$agency_id+":calendar_date_"+service_id, $var_hash)
+          if (key === 'date' && $model_name.to_s === 'calendar_date_')
+            date = val
+            redisize("SADD", $agency_id+"_calendar_dates", date)
+            redisize("HSET",$agency_id+":calendar_date_"+date, $var_hash)
           end
           
           if (key === 'fare_id' && $model_name.to_s === 'fare_attribute_')
             fare_id = val
+            redisize("SADD", $agency_id+"_fare_attributes", fare_id)
             redisize("HSET",$agency_id+":fare_attribute_"+fare_id, $var_hash)
           end
           
           if (key === 'fare_id' && $model_name.to_s === 'fare_rule_')
             fare_id = val
+            redisize("SADD", $agency_id+"_fare_rules", fare_id)
             redisize("HSET",$agency_id+":fare_rule_"+fare_id, $var_hash)
           end
           
           if (key === 'trip_id' && $model_name.to_s === 'frequency_')
             trip_id = val
+            redisize("SADD", $agency_id+"_frequencies", trip_id)
             redisize("HSET",$agency_id+":frequency_"+trip_id, $var_hash)
           end
           
           if (key === 'from_stop_id' && $model_name.to_s === 'transfer_')
             from_stop_id = val
+            redisize("SADD", $agency_id+"_transfers", from_stop_id)
             redisize("HSET",$agency_id+":transfer_"+from_stop_id, $var_hash)
           end
           
@@ -260,6 +299,7 @@ module GTFS
           
           if (key === 'shape_pt_sequence'  && $model_name.to_s === 'shape_')
             shape_pt_sequence = val
+            redisize("SADD", $agency_id+"_shape_pt_sequence", $shape_id.to_s+"_"+shape_pt_sequence.to_s)
             redisize("HSET",$agency_id+":shapes_"+$shape_id.to_s+"_"+shape_pt_sequence.to_s, $var_hash)
           end
            

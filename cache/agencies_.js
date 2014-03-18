@@ -1,10 +1,10 @@
 { 
-'agency_id': , '3', 
- 'agency_name': , 'Arcata_&_Mad_River_Transit_System', 
- 'agency_url': , 'http://www.arcatatransit.org/', 
+'agency_id': , 'IntercityTransit', 
+ 'agency_name': , 'Intercity_Transit', 
+ 'agency_url': , 'http://www.Intercitytransit.com', 
  'agency_timezone': , 'America/Los_Angeles', 
- 'agency_phone': , '(707) 822-3775', 
- 'agency_fare_url': , '', 
- 'agency_lang' , 'en' 
+ 'agency_phone': , '(360) 786-1881', 
+ 'agency_lang': , 'en', 
+ 'agency_fare_url' , '' 
 
  }, 

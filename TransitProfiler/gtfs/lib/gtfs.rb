@@ -21,7 +21,6 @@ require 'gtfs/fare_attribute'
 require 'gtfs/fare_rule'
 require 'gtfs/frequency'
 require 'gtfs/transfer'
-
 require 'gtfs/source'
 require 'gtfs/url_source'
 require 'gtfs/local_source'
@@ -32,7 +31,6 @@ require 'gtfs/local_source'
 # Relax the column checks, useful for sources that don't conform to standard
 #source = GTFS::Source.build("http://gtfs.s3.amazonaws.com/santa-cruz-metro_20130918_0104.zip", {strict: false})
 
-
 #writing to redis db is handled in gtfs/model.rb parse_model method
 redis = Redis.new()
 #parse json in js    var json = '{"result":true,"count":1}', obj = JSON && JSON.parse(json) || $.parseJSON(json);
@@ -40,7 +38,7 @@ redis = Redis.new()
 
 agency_uri = Array.new
 agency_uri << 'files/intercity-transit_20140107_0555.zip' #olympia
-agency_uri << 'files/humboldt-archiver_20140107_0650.zip' #eureka/arcata
+#agency_uri << 'files/humboldt-archiver_20140107_0650.zip' #eureka/arcata
 #agency_uri << 'files/mts_20140208_0134.zip' #san diego
 #agency_uri << 'http://www.intercitytransit.com/googledata/google_transit.zip'
 #agency_uri << 'http://gtfs.s3.amazonaws.com/santa-cruz-metro_20130918_0104.zip'
@@ -52,15 +50,15 @@ agency_uri.each do |au|
   source = GTFS::Source.build(au)
   agencies = source.agencies #REQUIRED TO RUN if you just are going for one particular file model you need model file plus agencies
   routes = source.routes #intercity
-  #stops = source.stops #intercity
-  #trips = source.trips #intercity
-  #stop_times = source.stop_times  #intercity
-  #source.calendars  #intercity
-  #source.calendar_dates #intercity    
+  stops = source.stops #intercity
+  trips = source.trips #intercity  #DEBUG TRIPS FIELDS 
+  stop_times = source.stop_times  #intercity
+  source.calendars  #intercity
+  source.calendar_dates #intercity    
   #source.fare_attributes   
   #source.fare_rules         
   #source.frequencies  
   #source.transfers 
-  #source.shapes #intercity
+  source.shapes #intercity
   
 end

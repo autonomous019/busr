@@ -41,7 +41,7 @@ exports.getAgencies = function(req, res) {
 					 return agencies;
 				 } 
 
-		      }
+		     }
 			  k++;
 		});
     }
@@ -72,7 +72,7 @@ exports.getAgencies = function(req, res) {
 			  
 			 my_detail_arr = results;
 			 agent.push(my_detail_arr);
-			 console.log(agent);
+			 
 			 return agent;
 
 	      }
@@ -108,12 +108,14 @@ exports.getAgencies = function(req, res) {
  		  		my_route_arr += [{"route_id":"404: error, no data"}];
 
  		      } else {
-				  console.log(results);
+				  
  				 my_route_arr = results;
+				 my_route_arr['route_agency_id'] = agency_name;
+				 //console.log("agency id "+my_route_arr['route_agency_id']);
  				 routes.push(my_route_arr);
 				 
  				 if(k == keys.length-1){
-                    
+                    //console.log(routes);
  					 return routes;
  				 } 
 
@@ -130,4 +132,7 @@ exports.getAgencies = function(req, res) {
  }
 
 
+
+
+ 
  

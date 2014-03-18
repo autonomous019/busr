@@ -1,4 +1,5 @@
 {
+	
   "name": "busr",
   "subdomain": "busr",
   "domains": [
@@ -8,14 +9,15 @@
   "description": "Busr Transitor, your transit adaptor",
   "version": "0.0.1-20",
   "scripts": {
-    "predeploy": "echo This will be run before deploying the app",
-    "postdeploy": "echo This will be run after deploying the app",
+    "predeploy": "echo starting deployment",
+    "postdeploy": "echo deployment completed",
     "test": "node_modules/.bin/mocha -w",
     "start": "web.js"
   },
   "dependencies": {
     "express": "3.x",
-    "hbs": "*"
+    "hbs": "2.x",
+	"redis" : "2.6.16"
   },
   "engines": {
     "node": "0.10.x",
@@ -24,4 +26,6 @@
   "devDependencies": {
     "should": "~2.1.0"
   }
+  
+  
 }

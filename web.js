@@ -3,19 +3,19 @@ var app = express();
 /*
 app
   .use(express.bodyParser())
-  .use(express.cookieParser('busrinf0!!!'))
+  .use(express.cookieParser('_busrinf0!!!'))
   .use(express.session())
   .use(everyauth.middleware(app));
 */
   
 var hbs = require('hbs');
+var helpers = require('./helpers.js'); //Handlebars helpers methods
 //var everyauth = require('everyauth');
-
-
 var routesEngine = require('./routes');
 var agenciesEngine = require('./agencies');
 var busrEngine = require('./busr');
 var posterEngine = require('./poster');
+var routeStopsEngine = require('./route_stops');
 
 
 
@@ -28,6 +28,9 @@ app.use(express.static('public'));
 app.get('/', function(req, res) {
 	res.render('index',{title:"Busr Transitor", entries:busrEngine.getBusrEntries()});
 });
+
+
+
 
 
 
@@ -52,7 +55,13 @@ app.get('/route/:id', function(req, res) {
 
 
 
+
+
+
 //STOPS STOPS STOPS
+
+
+//MTA version
 app.get('/stops/:id', function(req, res) {
 	var route_id = req.params.id;
 	var stops_data = require('./cache/route_'+route_id+'.js');
@@ -61,6 +70,8 @@ app.get('/stops/:id', function(req, res) {
 	res.render('stops',{id:stops.id, stops:stops});
 });
 
+
+//MTA version 
 app.get('/stop/:id', function(req, res) {
 	var stop_data = require('./cache/stop_'+req.params.id+'.js');
 	//console.log(stop_data);
@@ -71,10 +82,41 @@ app.get('/stop/:id', function(req, res) {
 	res.render('stop',{id:stop.id, stop:stop});
 });
 
+
+
+
+
+
+app.get('/route_stops/:agency_name/:route_id', function(req, res) {
+	var agency_name = req.params.agency_name;
+	var route_id = req.params.route_id;
+	console.log(agency_name);
+	console.log(route_id);
+	
+	stops = routeStopsEngine.setStops(route_id);
+	//trips = routeStopsEngine.getTripsStatic(route_id)
+	//res.render('route_stops',{title:"Route: "+agency_name+" Route: "+route_id, agency_name:agency_name, 
+	//route_stops:routeStopsEngine.getStopsStatic(agency_name), 
+	//trips:routeStopsEngine.getTripsStatic(route_id)});
+	res.render('route_stops',{title:"Route: "+agency_name+" Route: "+route_id, agency_name:agency_name, 
+	route_stops:routeStopsEngine.getStops(agency_name)}); 
+
+});
+
+
+
+
+
 app.get('/map', function(req, res) {
 	//var map_points = require('./maps/icon.js');
 	res.render('map', {title:"Map"});
 });
+
+
+
+
+
+
 
 
 //Trip Planning
@@ -91,10 +133,15 @@ app.get('/trip', function(req, res) {
 
 
 
+
+
 //ABOUT 
 app.get('/about', function(req, res) {
 	res.render('about', {title:"About"});
 });
+
+
+
 
 
 //AGENCIES NAVIGATOR
@@ -113,6 +160,8 @@ app.get('/agency/:agency_name', function(req, res) {
 	agent_routes:agenciesEngine.getAgencyRoutesStatic(agency_name),  
 	agent:agenciesEngine.getAgencyStatic(agency_name)});
 });
+
+
 
 
 

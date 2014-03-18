@@ -1,6 +1,6 @@
-
-
- <p>&nbsp;</p>
+<p>&nbsp;</p>
+{{agent.0.agency_name}}
+ 
 
 {{#each agent}}
 <h2>{{agency_name}} </h2>
@@ -18,7 +18,7 @@
 
 
 {{#each agent_routes}}
-<p>{{route_short_name}} : {{route_long_name}} </p>
+<p><a href="/route_stops/{{route_agency_id}}/{{route_id}}">{{route_short_name}} : {{route_long_name}} </a></p>
 
   
   
@@ -26,4 +26,5 @@
 
 
 
-		
+
+
