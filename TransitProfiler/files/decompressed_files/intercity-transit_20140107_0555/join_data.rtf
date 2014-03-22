@@ -212,6 +212,12 @@ redis-cli SMEMBERS 'Intercity_Transit_trips_7\'92 gets all trips for a route as 
 \
 \
 \
+michael-mccarrons-MacBook-Pro:TransitProfiler michaelmccarron$ redis-cli LINDEX 'Intercity_Transit_stops_to_route_7' 0\
+"\{\\"stop_id\\"=>\\"797\\", \\"stop_name\\"=>\\"State at Columbia [wb]\\", \\"stop_lat\\"=>\\"47.045712\\", \\"stop_lon\\"=>\\"-122.902855\\", \\"stop_code\\"=>\\"\\", \\"stop_desc\\"=>\\"\\", \\"stop_zone_id\\"=>\\"\\", \\"stop_url\\"=>\\"\\", \\"stop_location_type\\"=>\\"\\", \\"stop_parent_station\\"=>\\"\\", \\"stop_timezone\\"=>\\"\\", \\"stop_wheelchair_boarding\\"=>\\"\\"\}"\
+michael-mccarrons-MacBook-Pro:TransitProfiler michaelmccarron$ redis-cli LINDEX 'Intercity_Transit_stops_to_route_7' 1\
+"\{\\"stop_id\\"=>\\"796\\", \\"stop_name\\"=>\\"4th at Simmons [wb]\\", \\"stop_lat\\"=>\\"47.044563\\", \\"stop_lon\\"=>\\"-122.907219\\", \\"stop_code\\"=>\\"\\", \\"stop_desc\\"=>\\"\\", \\"stop_zone_id\\"=>\\"\\", \\"stop_url\\"=>\\"\\", \\"stop_location_type\\"=>\\"\\", \\"stop_parent_station\\"=>\\"\\", \\"stop_timezone\\"=>\\"\\", \\"stop_wheelchair_boarding\\"=>\\"\\"\}"\
+michael-mccarrons-MacBook-Pro:TransitProfiler michaelmccarron$ \
+\
 \
 \
 }

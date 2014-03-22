@@ -41,6 +41,7 @@ class Aggregator
   #create a master list of stops grouped by route
   #get Intercity_Transit_trips to get all trips for a route then get all stops from ‘Intercity_Transit_stop_times_<trip_id>’
   #redis-cli SMEMBERS 'Intercity_Transit_trips_7’ gets all trips for a route as INT by trip_id
+  #stop_info array is a redis list with stop details, redis key format: <@agency_name>_stops_to_route_<route_id> this is loaded into view views/route_stops.html
   def stops(route_id)
       stops = Array.new
       trips = Array.new
@@ -54,11 +55,12 @@ class Aggregator
         temp_stops += @redis.smembers(@agency_name+"_stop_times_"+t)
       end
       
+      #create a uniq list of stops by stop_id and push detail info into stop_info array
       temp_stops = temp_stops.uniq
       temp_stops.each do |ts|
         stop_info.push( @redis.hgetall(@agency_name+":stop_"+ts.to_s) ) #list of stops
       end
-      
+      #create a redis list struct of stops by route_id
       stop_info.each do |si|
         
         @redis.lpush(@agency_name+"_stops_to_route_"+route_id, si.to_s)
@@ -75,8 +77,7 @@ end
 agg = Aggregator.new('Intercity_Transit')
 puts agg.agents() #sets agents array
 puts agg.agents #@agents instance variable
+
+#get a list of routes by agency, then generate stops for routes
 agg_stops = agg.stops('7')
 puts "STOPS LEN "+agg_stops.length.to_s
-agg_stops.each do |as|
-  #puts as
-end
