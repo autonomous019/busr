@@ -4,6 +4,8 @@ require 'open-uri'
 require 'json'
 require 'redis'
 
+
+
 module GTFS
   module Model
     def self.included(base)
@@ -208,7 +210,7 @@ module GTFS
             agency_name = underscore(agency_name)
             redisize("HSET","agency:#{agency_name}",$var_hash)
             redisize("SADD", "agencies", agency_name)
-            cache_writer('agencies', '', $model, $var_hash)
+            #cache_writer('agencies', '', $model, $var_hash)
             
           end
           
@@ -222,23 +224,30 @@ module GTFS
           
           if (key === 'stop_id'   && $model_name.to_s === 'stop_')
             stop_id = val
-            redisize("SADD", $agency_id+"_stops", stop_id)
+            redisize("SADD", $agency_id+"_stops", stop_id) #used for sys wide map
             redisize("HSET",$agency_id+":stop_"+stop_id, $var_hash)
           end
           
           if (key === 'trip_id'   && $model_name.to_s === 'trip_')
             trip_id = val
-            #trip_id,route_id,service_id,trip_headsign,block_id,shape_id
+            route_id = $var_hash['route_id']
+            #trip_id,route_id,service_id,trip_headsign,block_id,shape_id           
+            #redisize("SADD", $agency_id+"_trips", trip_id+" "+route_id) #trips for agency set
+            redisize("SADD", $agency_id+"_trips_"+route_id, trip_id) #trips for a route set
             
-            redisize("SADD", $agency_id+"_trips", trip_id)
+            #set of stops for a route from stop_times at end of import to create master sets from master data
             redisize("HSET",$agency_id+":trip_"+trip_id, $var_hash)
           end
           
-     
+         
           if (key === 'trip_id' && $model_name.to_s === 'stop_time_')
             stop_id = $var_hash['stop_id']
+            
+            
             trip_id = val
-            redisize("SADD", $agency_id+"_stop_times", trip_id+"_"+stop_id)
+            #stop_times_<trip_id>
+            redisize("SADD", $agency_id+"_stop_times_"+trip_id, stop_id)
+            #in view get stops per trip get routes from trip
             redisize("HSET",$agency_id+":stop_times_"+trip_id+"_"+stop_id, $var_hash)
             
             #need a set of:
@@ -305,6 +314,8 @@ module GTFS
            
        end
       
+       
+       
         model = self.new(unprefixed_attr_hash)
         
       end #end filter method

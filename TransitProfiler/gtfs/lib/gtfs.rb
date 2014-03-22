@@ -62,3 +62,6 @@ agency_uri.each do |au|
   source.shapes #intercity
   
 end
+
+
+#don't forget to run aggregator.rb after parsing and creating redis hashes.  

@@ -90,16 +90,13 @@ app.get('/stop/:id', function(req, res) {
 app.get('/route_stops/:agency_name/:route_id', function(req, res) {
 	var agency_name = req.params.agency_name;
 	var route_id = req.params.route_id;
-	console.log(agency_name);
-	console.log(route_id);
-	
-	stops = routeStopsEngine.setStops(route_id);
-	//trips = routeStopsEngine.getTripsStatic(route_id)
-	//res.render('route_stops',{title:"Route: "+agency_name+" Route: "+route_id, agency_name:agency_name, 
-	//route_stops:routeStopsEngine.getStopsStatic(agency_name), 
-	//trips:routeStopsEngine.getTripsStatic(route_id)});
+	//imitialize the list of trips for a given route
+    routeStopsEngine.setTrips(route_id, agency_name);
+	var trips = routeStopsEngine.getTrips();
+	//var stops = routeStopsEngine.setStops(route_id, agency_name, trips);
+
 	res.render('route_stops',{title:"Route: "+agency_name+" Route: "+route_id, agency_name:agency_name, 
-	route_stops:routeStopsEngine.getStops(agency_name)}); 
+	route_stops:routeStopsEngine.getStops()}); 
 
 });
 
