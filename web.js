@@ -91,12 +91,12 @@ app.get('/route_stops/:agency_name/:route_id', function(req, res) {
 	var agency_name = req.params.agency_name;
 	var route_id = req.params.route_id;
 	//imitialize the list of trips for a given route
-    routeStopsEngine.setTrips(route_id, agency_name);
-	var trips = routeStopsEngine.getTrips();
-	//var stops = routeStopsEngine.setStops(route_id, agency_name, trips);
+    //routeStopsEngine.setTrips(route_id, agency_name);
+	//var trips = routeStopsEngine.getTrips();
+	//var stops = routeStopsEngine.setStops(route_id, agency_name);
 
 	res.render('route_stops',{title:"Route: "+agency_name+" Route: "+route_id, agency_name:agency_name, 
-	route_stops:routeStopsEngine.getStops()}); 
+	stops:routeStopsEngine.getStops(route_id, agency_name)}); 
 
 });
 

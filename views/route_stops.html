@@ -1,11 +1,22 @@
 <h2>Route Stops</h2>
-
+ Len: {{stops.length}}
+ 
+ 
 {{#each stops}}
 <p>
-<a href="/stop/{{id}}">{{id}} : {{long}} {{lat}}</a><br/>
+	{{@index}}
+<a href="/stop/{{stop_id}}">{{stops/stop_name}} : {{stops.stop_lon}} {{stop_lat}}</a><br/>
 
 
 </p>
 {{/each}}
 
 
+{{#with stops}}
+<p>
+	{{@key}}
+<a href="/stop/{{stop_id}}">{{stops/stop_name}} : {{stops.stop_lon}} {{stop_lat}}</a><br/>
+
+
+</p>
+{{/with}}

@@ -60,12 +60,12 @@ class Aggregator
       temp_stops.each do |ts|
         stop_info.push( @redis.hgetall(@agency_name+":stop_"+ts.to_s) ) #list of stops
       end
-      #create a redis list struct of stops by route_id
+      #create a redis list struct of stops by route_id, first empty it with redis.del
+      @redis.del(@agency_name+"_stops_to_route_"+route_id)
       stop_info.each do |si|
-        
+        puts si
         @redis.lpush(@agency_name+"_stops_to_route_"+route_id, si.to_s)
-        
-        
+ 
       end
       return stop_info
   end 
@@ -79,5 +79,5 @@ puts agg.agents() #sets agents array
 puts agg.agents #@agents instance variable
 
 #get a list of routes by agency, then generate stops for routes
-agg_stops = agg.stops('7')
+agg_stops = agg.stops('41')
 puts "STOPS LEN "+agg_stops.length.to_s

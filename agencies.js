@@ -37,7 +37,7 @@ exports.getAgencies = function(req, res) {
 				 agencies.push(my_arr);
 				 
 				 if(k == keys.length-1){
-                    
+					 console.log(agencies);
 					 return agencies;
 				 } 
 
