@@ -6,8 +6,7 @@ client.on("error", function (err) {
 });
 
 var my_arr = new Array();
-var stops = [ ];
-
+var stops =  new Array();
 
 //STOPS
 exports.setStops = function(route_id, agency_name) {
@@ -16,43 +15,43 @@ exports.setStops = function(route_id, agency_name) {
     	return stops;
     }
 
-	var i = 0;
-	
-	
-	
-    client.llen(agency_name+'_stops_to_route_'+route_id, function(err,counted) {
-	 
+	var i = 0;	
+	//smembers(@agency_name+"_stops_to_route_"+route_id)  
+    client.smembers(agency_name+'_stops_to_route_'+route_id, function(err,stop_ids) {
+	console.log(stop_ids);
 	   if (err) {
           
 	  		my_arr += [{"stop_id":"404: error, no data"}];
 
 	      } else {
-			  console.log(counted);
+			  
 			  i++;
-			for(var i = 0, len = counted; i < len; i++) {  
-		  	var k = 0;
-		  		  client.lindex(agency_name+'_stops_to_route_'+route_id,i, function(err,results) {
+			  for(var i = 0, len = stop_ids.length; i < len; i++) {  
+		  	      var k = 0;
+	
+				  
+				  //"Intercity_Transit:stop_82"
+		  		client.hgetall(agency_name+':stop_'+stop_ids[i], function(err, results) {
 			
-		  			   if (err) {
+		  		   if (err) {
 		          
-		  			  		my_arr += [{"stop_id":"404: error, no data"}];
+		  		  		my_arr += [{"agency_id":"404: error, no data", "agency_url":"sorry, temporary error"}];
 
-		  			      } else {
-							 
-							 my_arr = results;
-							 stops.push(my_arr);
-				             //console.log(k);
-							 //console.log(stops[k]);
-							 
-		  					 if(k === counted-1){
-								 //console.log("------------");
-		                         console.log(stops);
-		  						 return stops;
-		  					 } 
+		  		      } else {
+				  
+		  				 my_arr = results;
+		  				 stops.push(my_arr);
+				 
+		  				 if(k == stop_ids.length-1){
+		  					 console.log(stops);
+		  					 return stops;
+		  				 } 
 
-		  			     }
-		  				 k++;
-		  			});
+		  		     }
+		  			  k++;
+		  		});
+				  
+				  
 		  		
 	     }
 	  }
@@ -61,6 +60,7 @@ exports.setStops = function(route_id, agency_name) {
 };
 exports.getStops = function(route_id, agency_name) {
 	this.setStops(route_id, agency_name);
+	
 	return stops;
 
 };

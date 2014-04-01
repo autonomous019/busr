@@ -1,22 +1,12 @@
 <h2>Route Stops</h2>
  Len: {{stops.length}}
  
+ {{#each stops}}
+    {{this}}  <br />SID: {{stop_id}}<br /><br />
+ {{/each}}
  
-{{#each stops}}
-<p>
-	{{@index}}
-<a href="/stop/{{stop_id}}">{{stops/stop_name}} : {{stops.stop_lon}} {{stop_lat}}</a><br/>
 
 
-</p>
-{{/each}}
 
 
-{{#with stops}}
-<p>
-	{{@key}}
-<a href="/stop/{{stop_id}}">{{stops/stop_name}} : {{stops.stop_lon}} {{stop_lat}}</a><br/>
-
-
-</p>
-{{/with}}
+{{log stops}}

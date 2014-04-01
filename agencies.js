@@ -15,7 +15,7 @@ var routes = [ ];
 
 exports.getAgencies = function(req, res) {
     if(agencies.length >= 1){
-    	agencies = [];
+    	return agencies;
     }
 
     client.smembers('agencies', function(err, keys) {
