@@ -1,8 +1,24 @@
 <h2>Route Stops</h2>
- Len: {{stops.length}}
+Number of Route Stops: {{stops.length}}
+
+ <br /><br />
  
  {{#each stops}}
-    {{this}}  <br />SID: {{stop_id}}<br /><br />
+     
+    SID: {{stop_id}}<br />
+	Stop Name: {{stop_name}} <br />
+	Lat: {{stop_lat}} <br />
+	Lon: {{stop_lon}} <br />
+	Code: {{stop_code}} <br />
+	Desc: {{stop_desc}} <br />
+	Zone: {{stop_zone_id}} <br />
+	URL: {{stop_url}} <br />
+	Loc Type: {{stop_location_type}} <br />
+	Parent Station: {{stop_parent_station}} <br />
+	Timezone: {{stop_timezone}} <br />
+	Wheelchair: {{stop_wheelchair_boarding}} <br />
+	<hr>
+	
  {{/each}}
  
 
