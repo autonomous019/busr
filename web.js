@@ -7,10 +7,26 @@ app
   .use(express.session())
   .use(everyauth.middleware(app));
 */
-  
+
+//app templating engines   
 var hbs = require('hbs');
 var helpers = require('./helpers.js'); //Handlebars helpers methods
+//var L = require('leaflet');
+
+
+app.set('view engine', 'html');
+app.engine('html', hbs.__express);
+app.use(express.bodyParser());
+app.use(express.static('public'));
+
+//SESSIONS SESSIONS SESSIONS 
 //var everyauth = require('everyauth');
+
+
+
+
+
+//app speciic scripts
 var routesEngine = require('./routes');
 var agenciesEngine = require('./agencies');
 var busrEngine = require('./busr');
@@ -19,17 +35,13 @@ var routeStopsEngine = require('./route_stops');
 
 
 
-app.set('view engine', 'html');
-app.engine('html', hbs.__express);
-app.use(express.bodyParser());
 
-app.use(express.static('public'));
 
+
+//APP ROUTES APP ROUTES APP ROUTES APP ROUTES APP ROUTES 
 app.get('/', function(req, res) {
 	res.render('index',{title:"Busr Transitor", entries:busrEngine.getBusrEntries()});
 });
-
-
 
 
 
@@ -50,9 +62,6 @@ app.get('/route/:id', function(req, res) {
 	var route = routesEngine.getRoute(req.params.id);
 	res.render('route',{id:route.id, route:route, stops:stops});
 });
-
-
-
 
 
 
@@ -86,15 +95,12 @@ app.get('/stop/:id', function(req, res) {
 
 
 
-
+//ROUTE STOPS ROUTE STOPS ROUTE STOPS 
 app.get('/route_stops/:agency_name/:route_id', function(req, res) {
+	//var L = require("leaflet");
+	//L.Icon.Default.imagePath = 'node_modules/leaflet/dist/images/';
 	var agency_name = req.params.agency_name;
 	var route_id = req.params.route_id;
-	//imitialize the list of trips for a given route
-    //routeStopsEngine.setTrips(route_id, agency_name);
-	//var trips = routeStopsEngine.getTrips();
-	//var stops = routeStopsEngine.setStops(route_id, agency_name);
-
 	res.render('route_stops',{title:"Route: "+agency_name+" Route: "+route_id, agency_name:agency_name, 
 	stops:routeStopsEngine.getStops(route_id, agency_name)}); 
 

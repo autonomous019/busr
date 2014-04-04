@@ -5,6 +5,8 @@ client.on("error", function (err) {
     console.log("Error " + err);
 });
 
+
+
 var my_arr = new Array();
 var stops =  new Array();
 

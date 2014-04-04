@@ -20,10 +20,7 @@ class Aggregator
     @agents = Array.new 
     @redis = Redis.new(:host => "localhost", :port => 6379) 
   end  
-  
-  
-  
-  #CLASS METHODS
+
   
   ########### agents() #################################################### 
   #create a list of agents in the system
@@ -41,12 +38,12 @@ class Aggregator
   #create a master list of stops grouped by route
   #get Intercity_Transit_trips to get all trips for a route then get all stops from ‘Intercity_Transit_stop_times_<trip_id>’
   #redis-cli SMEMBERS 'Intercity_Transit_trips_7’ gets all trips for a route as INT by trip_id
-  #stop_info array is a redis list with stop details, redis key format: <@agency_name>_stops_to_route_<route_id> this is loaded into view views/route_stops.html
+ 
   def stops(route_id)
       stops = Array.new
       trips = Array.new
       temp_stops = Array.new
-      stop_info = Array.new
+     
       #get trips for a route
       trips = @redis.smembers(@agency_name+"_trips_"+route_id)
  
