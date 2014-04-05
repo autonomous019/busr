@@ -74,5 +74,5 @@ puts agg.agents() #sets agents array
 puts agg.agents #@agents instance variable
 
 #get a list of routes by agency, then generate stops for routes
-agg_stops = agg.stops('12')
+agg_stops = agg.stops('13')
 puts "STOPS LEN "+agg_stops.length.to_s

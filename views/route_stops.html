@@ -1,48 +1,38 @@
 Your Location: <div id="latlng"></div>
     <div id='map' style='width:750px; height:280px;'></div>
+	
         <script type="text/javascript">
 		
-		
-		var states = [{
-		    "type": "Feature",
-		    "properties": {"party": "Republican"},
-		    "geometry": {
-		        "type": "Polygon",
-		        "coordinates": [[
-		            [-104.05, 48.99],
-		            [-97.22,  48.98],
-		            [-96.58,  45.94],
-		            [-104.03, 45.94],
-		            [-104.05, 48.99]
-		        ]]
-		    }
-		}, {
-		    "type": "Feature",
-		    "properties": {"party": "Democrat"},
-		    "geometry": {
-		        "type": "Polygon",
-		        "coordinates": [[
-		            [-109.05, 41.00],
-		            [-102.06, 40.99],
-		            [-102.03, 36.99],
-		            [-109.04, 36.99],
-		            [-109.05, 41.00]
-		        ]]
-		    }
-		}];
+		      var stops = [
+	              {{#each stops}}
 
+		          {
+		               "type": "Feature",
+		               "properties": { 
+				           "stop_id": "{{stop_id}}", 
+    			            "stop_name": "{{stop_name}}",
+			                "popupContent": "{{stop_name}}: {{stop_desc}}" 
+			            },
+		                "geometry": {
+		                   "type": "Point",
+		                   "coordinates": [ {{stop_lat}}, {{stop_lon}} ]
+		                }
+		          },
+	
+  	              {{/each}}
+		       ];
 		
-		    var map = L.map('map', {});
+		        var map = L.map('map', {});
 				
-			L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 				            attribution: '© <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
 				            maxZoom: 18
 				         }).addTo(map);
 				
 	 
-			function onLocationFound(e) {
+			    var onLocationFound = function(e) {
 					var radius = e.accuracy / 2;
-			        alert(e.latlng);
+			        //alert(e.latlng);
 					$("#latlng").text(e.latlng);
 					L.marker(e.latlng).addTo(map)
 						.bindPopup("You are within " + radius + " meters from this point").openPopup();
@@ -50,54 +40,32 @@ Your Location: <div id="latlng"></div>
 					L.circle(e.latlng, radius).addTo(map);
 				}
 
-			function onLocationError(e) {
-					alert(e.message);
+			    var onLocationError = function(e) {
+				    $("#latlng").text("ERROR: "+e.message);
+					
 				}
-				
-				//basic geojson example
-				L.geoJson(states, {
-				    style: function(feature) {
-				        switch (feature.properties.party) {
-				            case 'Republican': return {color: "#ff0000"};
-				            case 'Democrat':   return {color: "#0000ff"};
-				        }
-				    }
-				}).addTo(map);
-				
-							
+			
 				//coloring markers
 				var geojsonMarkerOptions = {
-				    radius: 8,
-				    fillColor: "#ff7800",
+				    radius: 20,
+				    fillColor: "#cccccc",
 				    color: "#000",
 				    weight: 1,
 				    opacity: 1,
 				    fillOpacity: 0.8
 				};
 	
-				
 				//overlay pop up functionality
-				function onEachFeature(feature, layer) {
+				var onEachFeature = function(feature, layer) {
 				    // does this feature have a property named popupContent?
+					L.marker(feature.geometry.coordinates).addTo(map);
+					
 				    if (feature.properties && feature.properties.popupContent) {
 				        layer.bindPopup(feature.properties.popupContent);
 				    }
 				}
 
-				var geojsonFeature = {
-				    "type": "Feature",
-				    "properties": {
-				        "name": "Coors Field",
-				        "amenity": "Baseball Stadium",
-				        "popupContent": "This is where the Rockies play!"
-				    },
-				    "geometry": {
-				        "type": "Point",
-				        "coordinates": [-104.99404, 39.75621]
-				    }
-				};
-
-				L.geoJson(geojsonFeature, {
+				L.geoJson(stops, {
 
 							style: function (feature) {
 								return feature.properties && feature.properties.style;
@@ -109,15 +77,11 @@ Your Location: <div id="latlng"></div>
 								return L.circleMarker(latlng, geojsonMarkerOptions);
 							}
 						}).addTo(map);
-
+						
+			  map.on('locationfound', onLocationFound);
+			  map.on('locationerror', onLocationError);
+			  map.locate({setView: true, zoom: 16, maxZoom: 16});
 				
-				
-			map.on('locationfound', onLocationFound);
-			map.on('locationerror', onLocationError);
-			map.locate({setView: true, maxZoom: 16});
-				
-       
-
         </script>
 
 
@@ -127,7 +91,7 @@ Your Location: <div id="latlng"></div>
 
 
 <h2>Route Stops</h2>
-Number of Route Stops: {{stops.length}}
+Number of Route Stops: {{route_id}} {{stops.length}}
 
  <br /><br />
  

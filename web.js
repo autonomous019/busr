@@ -101,7 +101,7 @@ app.get('/route_stops/:agency_name/:route_id', function(req, res) {
 	//L.Icon.Default.imagePath = 'node_modules/leaflet/dist/images/';
 	var agency_name = req.params.agency_name;
 	var route_id = req.params.route_id;
-	res.render('route_stops',{title:"Route: "+agency_name+" Route: "+route_id, agency_name:agency_name, 
+	res.render('route_stops',{title:"Route: "+agency_name+" Route: "+route_id, route_id: route_id, agency_name:agency_name, 
 	stops:routeStopsEngine.getStops(route_id, agency_name)}); 
 
 });
