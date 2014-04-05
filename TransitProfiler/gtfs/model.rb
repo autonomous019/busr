@@ -245,22 +245,12 @@ module GTFS
             
             
             trip_id = val
+            #puts stop_id
             #stop_times_<trip_id>
+            
             redisize("SADD", $agency_id+"_stop_times_"+trip_id, stop_id)
             #in view get stops per trip get routes from trip
             redisize("HSET",$agency_id+":stop_times_"+trip_id+"_"+stop_id, $var_hash)
-            
-            #need a set of:
-            #routes connect to trips via route_id
-            #stop_times connect to trips via trip_id
-            #stops connect to stop_times via stop_id
-
-            #join routes to trips where routes.route_id = trips.route_id
-            #join stop_times to trips where stop_times.trip_id = trips.trip_id
-            #join stops to stop_times where stops.stop_id = stop_times.stop_id
-            
-            #calendars join trips via service_id
-            #calendar_dates join calendar via service_id
             
           end
           
@@ -365,21 +355,22 @@ module GTFS
       ########################################
       def redisize(mode, name, data)
         redis = Redis.new(:host => "localhost", :port => 6379)  
-        
-        
-          
+  
           if( mode === "HSET" )
             #HSET 
             data.each do |key,val|
-              redis.hset(name, key, val)
+              #redis.hset(name, key, val)
+              gen_redis_proto("HSET",name,key, val).inspect
+              #puts gen_redis_proto("SET","mykey","Hello World!").inspect
             end
  
           end
           
           if( mode === "SADD" )
             #HSET 
-             #$redis.sadd(self.redis_key(:following), user.id)
-              redis.sadd(name, data)
+          
+              #redis.sadd(name, data)
+              gen_redis_proto("SADD",name,data).inspect
           end
           
           
@@ -467,7 +458,7 @@ module GTFS
             #ensure
             #file.close unless file == nil
             #end
-          proto
+          puts proto
       end
       
       
