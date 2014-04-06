@@ -43,10 +43,11 @@ class Aggregator
       stops = Array.new
       trips = Array.new
       temp_stops = Array.new
-     
+      puts route_id
       #get trips for a route
       trips = @redis.smembers(@agency_name+"_trips_"+route_id)
- 
+      puts trips.length.to_s
+      
       trips.each do |t|      
         $stop = Hash.new
         temp_stops += @redis.smembers(@agency_name+"_stop_times_"+t)
@@ -54,12 +55,13 @@ class Aggregator
       
       #create a uniq list of stops by stop_id and push detail info into stop_info array
       temp_stops = temp_stops.uniq
-     
+      
       puts @agency_name+"_stops_to_route_"+route_id
       temp_stops.each do |ts|
+        #puts ts
         @redis.SADD(@agency_name+"_stops_to_route_"+route_id, ts.to_s)
       end
-      puts @redis.smembers(@agency_name+"_stops_to_route_"+route_id)  
+      #puts @redis.smembers(@agency_name+"_stops_to_route_"+route_id)  
       
       
      return temp_stops
@@ -74,5 +76,5 @@ puts agg.agents() #sets agents array
 puts agg.agents #@agents instance variable
 
 #get a list of routes by agency, then generate stops for routes
-agg_stops = agg.stops('13')
+agg_stops = agg.stops('11')
 puts "STOPS LEN "+agg_stops.length.to_s

@@ -216,6 +216,11 @@ module GTFS
           
           if (key === 'route_id'   && $model_name.to_s === 'route_')
             route_id = val
+            
+            #if($agency_id === 'Intercity_Transit') 
+            #  route_id = $var_hash['route_short_name']
+            #end
+            #puts route_id
             redisize("SADD", $agency_id+"_routes", route_id)
             redisize("HSET",$agency_id+":route_"+route_id, $var_hash)
             
@@ -230,9 +235,13 @@ module GTFS
           
           if (key === 'trip_id'   && $model_name.to_s === 'trip_')
             trip_id = val
+            #puts trip_id
+            trip_id = 0.to_s if trip_id.nil? || trip_id.empty?
             route_id = $var_hash['route_id']
+            #puts route_id
             #trip_id,route_id,service_id,trip_headsign,block_id,shape_id           
             #redisize("SADD", $agency_id+"_trips", trip_id+" "+route_id) #trips for agency set
+
             redisize("SADD", $agency_id+"_trips_"+route_id, trip_id) #trips for a route set
             
             #set of stops for a route from stop_times at end of import to create master sets from master data

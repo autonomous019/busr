@@ -14,13 +14,15 @@ var stops =  new Array();
 exports.setStops = function(route_id, agency_name) {
 	
     if(stops.length >= 1){
-    	return stops;
+    	 stops.length = 0;
     }
 
 	var i = 0;	
 	//smembers(@agency_name+"_stops_to_route_"+route_id)  
     client.smembers(agency_name+'_stops_to_route_'+route_id, function(err,stop_ids) {
-	console.log(stop_ids);
+	
+	console.log(agency_name+'_stops_to_route_'+route_id+' '+stop_ids+' '+i);
+	
 	   if (err) {
           
 	  		my_arr += [{"stop_id":"404: error, no data"}];
@@ -45,7 +47,7 @@ exports.setStops = function(route_id, agency_name) {
 		  				 stops.push(my_arr);
 				 
 		  				 if(k == stop_ids.length-1){
-		  					 console.log(stops);
+		  					 //console.log(stops);
 		  					 return stops;
 		  				 } 
 
