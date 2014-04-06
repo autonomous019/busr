@@ -1,10 +1,19 @@
 
  <h2>Route: {{route_id}}</h2>
  {{!-- stops.length --}}
+ <style>
+ #map {
+ 	position: absolute;
+ 	float: left;
  
+ 	height: 50%;
+ 	width: 70%;
+ 	z-index: 1;
+ }
+ </style>
  
 <div id="latlng"></div>
-    <div id='map' style='width:750px; height:280px;'></div>
+    <div id='map'></div>
 	
         <script type="text/javascript">
 		
