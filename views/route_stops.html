@@ -4,7 +4,7 @@
  <style>
  #map {
  	position: absolute;
- 	float: left;
+    text-position: center;
  
  	height: 50%;
  	width: 70%;
@@ -25,7 +25,7 @@
 		               "properties": { 
 				           "stop_id": "{{stop_id}}", 
     			            "stop_name": "{{stop_name}}",
-			                "popupContent": "{{stop_name}}: {{stop_desc}}" 
+			                "popupContent": "{{stop_name}}" 
 			            },
 		                "geometry": {
 		                   "type": "Point",
@@ -72,9 +72,8 @@
 				//overlay pop up functionality
 				var onEachFeature = function(feature, layer) {
 				    // does this feature have a property named popupContent?
-					L.marker(feature.geometry.coordinates).addTo(map);
-					
 				    if (feature.properties && feature.properties.popupContent) {
+						
 				        layer.bindPopup(feature.properties.popupContent);
 				    }
 				}
@@ -88,7 +87,8 @@
 							onEachFeature: onEachFeature,
 
 							pointToLayer: function (feature, latlng) {
-								return L.circleMarker(latlng, geojsonMarkerOptions);
+								return L.marker(feature.geometry.coordinates, geojsonMarkerOptions);
+								
 							}
 						}).addTo(map);
 						
@@ -102,7 +102,11 @@
 
 
  <br /><br />
- 
+  <br /><br />
+   <br /><br />
+    <br /><br />
+
+ <!-- 
  {{#each stops}}
      
     SID: {{stop_id}}<br />
@@ -123,7 +127,7 @@
  
 
 
-
+-->
 
 {{log stops}}
 
