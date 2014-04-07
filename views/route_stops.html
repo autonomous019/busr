@@ -10,11 +10,31 @@
  	width: 70%;
  	z-index: 1;
  }
+ 
+ 
+ <style>
+ .leaflet-control-layers-toggle:after{ 
+     content:"your text"; 
+     color:#000 ;
+ }
+ .leaflet-control-layers-toggle{ 
+     width:auto;
+     background-position:3px 50% ;
+     padding:3px;
+     padding-left:36px;
+     text-decoration:none;
+     line-height:36px;
+
+ }
+ </style>
+ 
  </style>
  
 <div id="latlng"></div>
-    <div id='map'></div>
+<div id='map'></div>
 	
+  
+ 
         <script type="text/javascript">
 		
 		      var stops = [
@@ -36,8 +56,57 @@
   	              {{/each}}
 		       ];
 		
-		        var map = L.map('map', {});
+			   var busIcon = L.icon({
+			       iconUrl: '/bus_stop_icon.png'
+			   });
+
+			   //var london = L.marker([51.3512542357518,-0.461769104003906],{icon: officeIcon}).addTo(map).bindPopup('<b>Office Address</b>');
+		
+	           var stopies = new L.LayerGroup();
+			   
+			   {{#each stops}}
+			        L.marker([ {{stop_lat}}, {{stop_lon}} ],{icon: busIcon}).bindPopup( '{{stop_name}}' ).addTo(stopies),
+			   {{/each}}
+
+	
+	           
+	           L.marker([39.77, -105.23],{icon: busIcon}).bindPopup('This is Golden, CO.').addTo(stopies);
+
+
+	           var cmAttr = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 Clou   dMade',
+	           cmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+
+	       var minimal   = L.tileLayer(cmUrl, {attribution: cmAttr}),
+	           midnight  = L.tileLayer(cmUrl, { attribution: cmAttr}),
+	           motorways = L.tileLayer(cmUrl, {attribution: cmAttr});
 				
+		
+		
+		
+		       var map = L.map('map', {
+		           zoom: 10,
+		           layers: [minimal, motorways, stopies]
+		       });
+				
+
+
+				
+		       var baseLayers = {
+		           "Minimal": minimal,
+		           "Transfers": midnight
+		       };
+
+		       var overlays = {
+		           "Route Line": motorways,
+		           "Stops": stopies
+		       };
+
+		         L.control.layers(baseLayers, overlays).addTo(map);
+	
+	
+	
+	
+	//END LAYERS			
 			    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 				            attribution: '© <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
 				            maxZoom: 18
@@ -95,8 +164,11 @@
 			  map.on('locationfound', onLocationFound);
 			  map.on('locationerror', onLocationError);
 			  map.locate({setView: true, zoom: 16, maxZoom: 16});
+	     
+			
 				
         </script>
+
 
 
 
@@ -130,4 +202,3 @@
 -->
 
 {{log stops}}
-
