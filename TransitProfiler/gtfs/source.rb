@@ -63,7 +63,9 @@ module GTFS
 
     def raise_if_missing_source(filename)
       file_missing = !entries.include?(filename)
-      raise InvalidSourceException.new("Missing required source file: #{filename}") if file_missing
+      #puts file_missing
+      #raise InvalidSourceException.new("Missing required source file: #{filename}") if file_missing
+      
     end
 
     ENTITIES.each do |entity|
@@ -90,8 +92,13 @@ module GTFS
 
     def parse_file(filename)
       #sanitize any non-standardized agency added corrupte data here like double quotes
+      #puts filename
+      if(!entries.include?(filename))
+        return
+      end
+      
       File.write(f = @tmp_dir+'/'+filename, File.read(f).gsub('"', ''))
-      raise_if_missing_source filename
+      raise_if_missing_source(filename)
      
       
       open File.join(@tmp_dir, '/', filename), 'r:bom|utf-8' do |f|
