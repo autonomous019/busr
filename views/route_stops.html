@@ -45,7 +45,7 @@
 		               "properties": { 
 				           "stop_id": "{{stop_id}}", 
     			            "stop_name": "{{stop_name}}",
-			                "popupContent": "{{stop_name}}" 
+			                "popupContent": "<b>{{stop_name}}</b><br />Stop ID: {{stop_id}} " 
 			            },
 		                "geometry": {
 		                   "type": "Point",
@@ -56,8 +56,17 @@
   	              {{/each}}
 		       ];
 		
+	
+			   
 			   var busIcon = L.icon({
-			       iconUrl: '/bus_stop_icon.png'
+			       iconUrl: '/bus_stop_icon.png',
+			       shadowUrl: '/inkblot.png',
+
+			       iconSize:     [32, 32], // size of the icon
+			       shadowSize:   [32, 32], // size of the shadow
+			       iconAnchor:   [16, 16], // point of the icon which will correspond to marker's location
+			       shadowAnchor: [4, 4],  // the same for the shadow
+			       popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
 			   });
 
 			   //var london = L.marker([51.3512542357518,-0.461769104003906],{icon: officeIcon}).addTo(map).bindPopup('<b>Office Address</b>');
@@ -67,30 +76,21 @@
 			   {{#each stops}}
 			        L.marker([ {{stop_lat}}, {{stop_lon}} ],{icon: busIcon}).bindPopup( '{{stop_name}}' ).addTo(stopies),
 			   {{/each}}
-
-	
-	           
+ 
 	           L.marker([39.77, -105.23],{icon: busIcon}).bindPopup('This is Golden, CO.').addTo(stopies);
-
 
 	           var cmAttr = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 Clou   dMade',
 	           cmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
-	       var minimal   = L.tileLayer(cmUrl, {attribution: cmAttr}),
+	           var minimal   = L.tileLayer(cmUrl, {attribution: cmAttr}),
 	           midnight  = L.tileLayer(cmUrl, { attribution: cmAttr}),
 	           motorways = L.tileLayer(cmUrl, {attribution: cmAttr});
-				
-		
-		
-		
+
 		       var map = L.map('map', {
 		           zoom: 10,
 		           layers: [minimal, motorways, stopies]
 		       });
-				
 
-
-				
 		       var baseLayers = {
 		           "Minimal": minimal,
 		           "Transfers": midnight
@@ -101,24 +101,19 @@
 		           "Stops": stopies
 		       };
 
-		         L.control.layers(baseLayers, overlays).addTo(map);
+		       L.control.layers(baseLayers, overlays).addTo(map);
 	
-	
-	
-	
-	//END LAYERS			
-			    L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			   L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 				            attribution: '© <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
 				            maxZoom: 18
-				         }).addTo(map);
-				
+				         }).addTo(map);			
 	 
 			    var onLocationFound = function(e) {
 					var radius = e.accuracy / 2;
 			        //alert(e.latlng);
 					$("#latlng").text(e.latlng);
 					L.marker(e.latlng).addTo(map)
-						.bindPopup("You are within " + radius + " meters from this point").openPopup();
+						.bindPopup("You: " + radius).openPopup();
 
 					L.circle(e.latlng, radius).addTo(map);
 				}
@@ -143,7 +138,7 @@
 				    // does this feature have a property named popupContent?
 				    if (feature.properties && feature.properties.popupContent) {
 						
-				        layer.bindPopup(feature.properties.popupContent);
+				        layer.bindPopup(feature.properties.popupContent, {className: 'mouseover-popup', minWidth: '190px'});
 				    }
 				}
 
@@ -160,6 +155,8 @@
 								
 							}
 						}).addTo(map);
+						
+		
 						
 			  map.on('locationfound', onLocationFound);
 			  map.on('locationerror', onLocationError);

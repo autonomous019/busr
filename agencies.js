@@ -14,10 +14,12 @@ var agent = [ ];
 var routes = [ ];
 
 exports.getAgencies = function(req, res) {
+    //if(agencies.length >= 1){
+    //	return agencies;
+    //}
     if(agencies.length >= 1){
-    	return agencies;
+    	 agencies.length = 0;
     }
-
     client.smembers('agencies', function(err, keys) {
 
     if (err) return console.log(err);
