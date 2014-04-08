@@ -61,7 +61,7 @@
 			   
 			   var busIcon = L.icon({
 			       iconUrl: '/bus_stop_icon.png',
-			       shadowUrl: '/inkblot.png',
+			       shadowUrl: '/tri.png',
 
 			       iconSize:     [32, 32], // size of the icon
 			       shadowSize:   [32, 32], // size of the shadow
@@ -124,44 +124,7 @@
 					
 				}
 			
-				//coloring markers
-				var geojsonMarkerOptions = {
-				    radius: 20,
-				    fillColor: "#cccccc",
-				    color: "#000",
-				    weight: 1,
-				    opacity: 1,
-				    fillOpacity: 0.8
-				};
 	
-				//overlay pop up functionality
-				var onEachFeature = function(feature, layer) {
-				    // does this feature have a property named popupContent?
-				    if (feature.properties && feature.properties.popupContent) {
-					    
-				        layer.bindPopup(feature.properties.popupContent, {className: 'mouseover-popup', minWidth: '190px'});
-				    }
-				}
-
-				L.geoJson(stops, {
-
-							style: function (feature) {
-								return feature.properties && feature.properties.style;
-							},
-
-							onEachFeature: onEachFeature,
-							
-							
-
-							pointToLayer: function (feature, latlng) {
-							
-								return L.marker(feature.geometry.coordinates, {icon: busIcon});
-								
-								
-							}
-						}).addTo(map);
-						
-		      
 						
 			  map.on('locationfound', onLocationFound);
 			  map.on('locationerror', onLocationError);
