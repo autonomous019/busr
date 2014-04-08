@@ -13,15 +13,42 @@
  
  
  <style>
- .leaflet-control-layers-toggle:after{ 
-     content:"your text"; 
-     color:#000 ;
+ .leaflet-control-command{
+ 	background-image: url('/bus_stop_icon.png');
+	
  }
+ 
+ 
+ 
+ .leaflet-control-layers-toggle:after{ 
+	 background-image: url('/bus_stop_icon.png');
+     content:" "; 
+     color:#000 ;
+	 
+	     width: 50px;
+	     height: 50px;
+	     background-position: 50% 50%;
+	     background-repeat: no-repeat;
+	     display: block;
+	     padding: 3px;
+	     border-radius: 4px;
+	     -webkit-border-radius: 4px;
+	     -moz-border-radius: 4px;
+	     box-shadow: 0 1px 7px rgba(0, 0, 0, 0.65);
+	     cursor: auto;
+	     text-align: center;
+	     background-color: #FFFFFF;
+	 }
+
+  .leaflet-control-layers-toggle:hover
+	 {
+	     background-color: #F4F4F4;
+	 }
  .leaflet-control-layers-toggle{ 
      width:auto;
      background-position:3px 50% ;
      padding:3px;
-     padding-left:36px;
+    
      text-decoration:none;
      line-height:36px;
 

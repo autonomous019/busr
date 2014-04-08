@@ -458,15 +458,6 @@ module GTFS
               proto << arg.to_s+"\r\n"
           }
 
-          
-          #begin
-          #  file = File.open("../../../cache/rds_mass_inserts_test.txt", "a+")
-          #  file.write(proto) 
-          #rescue IOError => e
-            #some error occur, dir not writable etc.
-            #ensure
-            #file.close unless file == nil
-            #end
           puts proto
       end
       

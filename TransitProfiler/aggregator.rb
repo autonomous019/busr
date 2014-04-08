@@ -5,7 +5,7 @@ require 'open-uri'
 require 'json'
 require 'redis'
 require 'yaml'
-
+require 'optparse'
 
 #PUT MASTER DATA SETTERS HERE
 #need a list of stop objects per route_id via trip_id and stop_times
@@ -43,10 +43,10 @@ class Aggregator
       stops = Array.new
       trips = Array.new
       temp_stops = Array.new
-      puts route_id
+      #puts route_id
       #get trips for a route
       trips = @redis.smembers(@agency_name+"_trips_"+route_id)
-      puts trips.length.to_s
+      #puts trips.length.to_s
       
       trips.each do |t|      
         $stop = Hash.new
@@ -56,7 +56,7 @@ class Aggregator
       #create a uniq list of stops by stop_id and push detail info into stop_info array
       temp_stops = temp_stops.uniq
       
-      puts @agency_name+"_stops_to_route_"+route_id
+      #puts @agency_name+"_stops_to_route_"+route_id
       temp_stops.each do |ts|
         #puts ts
         @redis.SADD(@agency_name+"_stops_to_route_"+route_id, ts.to_s)
@@ -70,11 +70,44 @@ class Aggregator
   
 end 
 
-#redis.sadd 'foo-tags', 'one'
-agg = Aggregator.new('Intercity_Transit')
-puts agg.agents() #sets agents array
-puts agg.agents #@agents instance variable
 
-#get a list of routes by agency, then generate stops for routes
-agg_stops = agg.stops('2')
-puts "STOPS LEN "+agg_stops.length.to_s
+# main driver
+options = {}
+OptionParser.new do |opts|
+  
+  opts.banner = "Usage: example.rb [options]"
+
+  
+  opts.on("-a", "--agency", "transit agency") do |a|
+    #puts "agency: "+a.to_s
+    options[:agency] = a
+  end
+  
+  #need an option -l to list agencies ready for aggregation
+  
+  
+end.parse!
+
+#puts options
+#puts ARGV
+
+ARGV.each do |argv|
+  puts "Aggregating Data into Redis for Agency: "+argv
+  redis = Redis.new(:host => "localhost", :port => 6379) 
+  #get set of routes for each agency 
+  routes = redis.smembers(argv+'_routes') 
+  
+  #keep the agencies atomized for testing purposes until the system is robust enough. 
+  agg = Aggregator.new(argv)
+  #puts agg.agents() #sets agents array
+  #puts agg.agents #@agents instance variable
+
+  #get a list of routes by agency, then generate stops for routes
+  routes.each do |r|
+    agg_stops = agg.stops(r)
+    puts "Route: "+ r+" STOPS LEN "+agg_stops.length.to_s
+  end
+end
+
+
+
