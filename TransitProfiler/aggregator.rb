@@ -7,9 +7,7 @@ require 'redis'
 require 'yaml'
 require 'optparse'
 
-#PUT MASTER DATA SETTERS HERE
-#need a list of stop objects per route_id via trip_id and stop_times
-#create a master list of stops grouped by route
+
 
 #Aggregator does heavy lifting of crunching data and setting up final object lists for views (i.e. collections based on models) Basic data is gathered in model.rb when it is called by gtfs.rb this class aggregates those data structs
 class Aggregator  
@@ -75,7 +73,7 @@ end
 options = {}
 OptionParser.new do |opts|
   
-  opts.banner = "Usage: example.rb [options]"
+  opts.banner = "Usage: aggregator.rb [options]"
 
   
   opts.on("-a", "--agency", "transit agency") do |a|
@@ -90,6 +88,8 @@ end.parse!
 
 #puts options
 #puts ARGV
+
+#TODO: create a list of stops that service multiple routes and list as transfer stops
 
 ARGV.each do |argv|
   puts "Aggregating Data into Redis for Agency: "+argv
@@ -108,6 +108,8 @@ ARGV.each do |argv|
     puts "Route: "+ r+" STOPS LEN "+agg_stops.length.to_s
   end
 end
+puts "---------------------------------------------"
+puts
 
 
 
