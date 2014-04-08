@@ -45,7 +45,8 @@
 		               "properties": { 
 				           "stop_id": "{{stop_id}}", 
     			            "stop_name": "{{stop_name}}",
-			                "popupContent": "<b>{{stop_name}}</b><br />Stop ID: {{stop_id}} " 
+			                "popupContent": "<b>{{stop_name}}</b><br />Stop ID: {{stop_id}} ",
+							
 			            },
 		                "geometry": {
 		                   "type": "Point",
@@ -79,7 +80,7 @@
  
 	           L.marker([39.77, -105.23],{icon: busIcon}).bindPopup('This is Golden, CO.').addTo(stopies);
 
-	           var cmAttr = 'Map data &copy; 2011 OpenStreetMap contributors, Imagery &copy; 2011 Clou   dMade',
+	           var cmAttr = 'Busr.info Map data &copy; 2011 OpenStreetMap contributors',
 	           cmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
 	           var minimal   = L.tileLayer(cmUrl, {attribution: cmAttr}),
@@ -137,7 +138,7 @@
 				var onEachFeature = function(feature, layer) {
 				    // does this feature have a property named popupContent?
 				    if (feature.properties && feature.properties.popupContent) {
-						
+					    
 				        layer.bindPopup(feature.properties.popupContent, {className: 'mouseover-popup', minWidth: '190px'});
 				    }
 				}
@@ -149,14 +150,18 @@
 							},
 
 							onEachFeature: onEachFeature,
+							
+							
 
 							pointToLayer: function (feature, latlng) {
-								return L.marker(feature.geometry.coordinates, geojsonMarkerOptions);
+							
+								return L.marker(feature.geometry.coordinates, {icon: busIcon});
+								
 								
 							}
 						}).addTo(map);
 						
-		
+		      
 						
 			  map.on('locationfound', onLocationFound);
 			  map.on('locationerror', onLocationError);
