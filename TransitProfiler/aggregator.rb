@@ -66,6 +66,47 @@ class Aggregator
   end 
   
   
+
+  
+  ########### route_map() #################################################### 
+  
+ 
+  def route_map(route_id)
+      coords = Array.new
+      temp_coords = Array.new
+      trips = Array.new
+      shape_ids = Array.new
+      shapes = Array.new
+      
+      #get trips for a route
+      trips = @redis.smembers(@agency_name+"_trips_"+route_id.to_s)
+      trips.each do |t|      
+        
+        #hmget 'Intercity_Transit:trip_380' shape_id
+        shape_ids += @redis.hmget(@agency_name+":trip_"+t, "shape_id")
+      end
+      shape_ids.each do |sid|
+        #redis-cli smembers 'Intercity_Transit_shape_8'
+        shapes = @redis.smembers(@agency_name+"_shape_"+sid.to_s)
+        shapes.each do |s|
+          #redis-cli hgetall 'Intercity_Transit:shapes_8_17'
+          coords.push(@redis.hgetall(@agency_name+":shapes_"+sid.to_s+"_"+s.to_s))
+          @redis.SADD(@agency_name+"_route_shapes_"+route_id.to_s, sid.to_s+" "+s.to_s)
+          #creates redis set redis-cli smembers 'Intercity_Transit_route_shapes_8' which is picked up in route_stops.js
+        end  
+      end
+      temp_coords = coords.uniq
+      puts temp_coords.length
+      temp_coords.each do |c|
+        puts c
+        
+      end
+     
+      
+     return temp_coords
+  end
+  
+  
 end 
 
 
@@ -92,13 +133,19 @@ end.parse!
 #TODO: create a list of stops that service multiple routes and list as transfer stops
 
 ARGV.each do |argv|
+  agg = Aggregator.new(argv)
   puts "Aggregating Data into Redis for Agency: "+argv
   redis = Redis.new(:host => "localhost", :port => 6379) 
+  
+  
+  agg.route_map(8)
+  exit()
+  
+  
   #get set of routes for each agency 
   routes = redis.smembers(argv+'_routes') 
   
   #keep the agencies atomized for testing purposes until the system is robust enough. 
-  agg = Aggregator.new(argv)
   #puts agg.agents() #sets agents array
   #puts agg.agents #@agents instance variable
 
@@ -111,5 +158,32 @@ end
 puts "---------------------------------------------"
 puts
 
+
+=begin
+Route Line Drawing Algorithm:
+get a list of all trips for a route by route_id i.e. 8
+$ redis-cli smembers 'Intercity_Transit_trips_8'
+
+
+
+get the shape_id for trip 380 
+$ redis-cli hmget 'Intercity_Transit:trip_380' shape_id
+
+Intercity_Transit_shape_8 a set of all shape_sequences by shape_id
+redis-cli smembers 'Intercity_Transit_shape_8'
+
+and finally get and add to map:
+$ redis-cli hgetall 'Intercity_Transit:shapes_8_17'
+ 1) "shape_id"
+ 2) "8"
+ 3) "shape_pt_sequence"
+ 4) "17"
+ 5) "shape_dist_traveled"
+ 6) "1.71212244884"
+ 7) "shape_pt_lat"
+ 8) "47.03907"
+ 9) "shape_pt_lon"
+10) "-122.91466"
+=end
 
 

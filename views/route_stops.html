@@ -1,6 +1,9 @@
 
  <h2>Route: {{route_id}}</h2>
  {{!-- stops.length --}}
+ 
+ Map array length: {{ route_map.length }}
+ 
  <style>
  #map {
  	position: absolute;
@@ -62,6 +65,27 @@
   
  
         <script type="text/javascript">
+		/*
+{
+    "type": "MultiLineString", 
+    "coordinates": [
+        [[10, 10], [20, 20], [10, 40]], 
+        [[40, 40], [30, 30], [40, 20], [30, 10]]
+    ]
+}
+{ shape_id: '8',
+    shape_pt_sequence: '46',
+    shape_dist_traveled: '3.66486260083',
+    shape_pt_lat: '47.03043',
+    shape_pt_lon: '-122.91581' },
+		*/
+	var latlngs = new Array();
+		
+	{{#each route_map}}
+		    latlngs.push(new L.LatLng( {{shape_pt_lat}}, {{shape_pt_lon}} ));
+		    
+		
+		{{/each}}
 		
 		      var stops = [
 	              {{#each stops}}
@@ -83,7 +107,14 @@
   	              {{/each}}
 		       ];
 		
-	
+			   var geojsonMarkerOptions = {
+			       radius: 8,
+			       fillColor: "#ff7800",
+			       color: "#000",
+			       weight: 1,
+			       opacity: 1,
+			       fillOpacity: 0.8
+			   };
 			   
 			   var busIcon = L.icon({
 			       iconUrl: '/bus_stop_icon.png',
@@ -95,17 +126,23 @@
 			       shadowAnchor: [4, 4],  // the same for the shadow
 			       popupAnchor:  [0, 0] // point from which the popup should open relative to the iconAnchor
 			   });
-
-			   //var london = L.marker([51.3512542357518,-0.461769104003906],{icon: officeIcon}).addTo(map).bindPopup('<b>Office Address</b>');
 		
 	           var stopies = new L.LayerGroup();
 			   
 			   {{#each stops}}
-			        L.marker([ {{stop_lat}}, {{stop_lon}} ],{icon: busIcon}).bindPopup( '{{stop_name}}' ).addTo(stopies),
+			        L.marker([ {{stop_lat}}, {{stop_lon}} ],{icon: busIcon}).bindPopup( '{{stop_name}} - {{stop_id}}' ).addTo(stopies),
 			   {{/each}}
  
 	           L.marker([39.77, -105.23],{icon: busIcon}).bindPopup('This is Golden, CO.').addTo(stopies);
-
+			   
+	           var map_points = new L.LayerGroup();
+			   
+			   {{#each route_map}}
+			        L.marker([ {{shape_pt_lat}}, {{shape_pt_lon}} ], geojsonMarkerOptions).bindPopup( '{{shape_dist_traveled}} - {{shape_id}}: {{shape_pt_sequence}}' ).addTo(map_points),
+			   {{/each}}
+ 
+	           L.marker([0, -0]).bindPopup('0,0').addTo(map_points);
+			   
 	           var cmAttr = 'Busr.info Map data &copy; 2011 OpenStreetMap contributors',
 	           cmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
@@ -124,7 +161,7 @@
 		       };
 
 		       var overlays = {
-		           "Route Line": motorways,
+		           "Route Line": map_points,
 		           "Stops": stopies
 		       };
 
@@ -150,7 +187,8 @@
 					
 				}
 			
-	
+				// create a red polyline from an arrays of LatLng points
+				var polyline = L.polyline(latlngs, {color: 'red'}).addTo(map);
 						
 			  map.on('locationfound', onLocationFound);
 			  map.on('locationerror', onLocationError);

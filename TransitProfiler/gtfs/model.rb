@@ -307,8 +307,10 @@ module GTFS
           
           if (key === 'shape_pt_sequence'  && $model_name.to_s === 'shape_')
             shape_pt_sequence = val
-            redisize("SADD", $agency_id+"_shape_pt_sequence", $shape_id.to_s+"_"+shape_pt_sequence.to_s)
-            redisize("HSET",$agency_id+":shapes_"+$shape_id.to_s+"_"+shape_pt_sequence.to_s, $var_hash)
+            
+            redisize("HSET",$agency_id+":shapes_"+$shape_id.to_s+"_"+shape_pt_sequence.to_s, $var_hash) #Intercity_Transit:shapes_8_17
+            redisize("SADD",$agency_id+"_shape_"+$shape_id.to_s, shape_pt_sequence.to_s) #Intercity_Transit_shape_8 a set of shape_pt_sequences to shape_id
+            
           end
            
        end
